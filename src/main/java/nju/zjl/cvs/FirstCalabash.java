@@ -19,27 +19,26 @@ public class FirstCalabash{
             return;
         }
         int next = movePath.peek();
-        if(MainController.map[next]){
+        if(MainController.getCreatureByPos(next) != null){
             if(!computePath(dest)){
                 return;
             }
             next = movePath.peek();
         }
-        MainController.map[pos] = false;
-        MainController.map[next] = true;
+        MainController.moveCreature(pos, next);
         pos = next;
         moveCD = Constants.CMS;
         movePath.poll();
         if(movePath.isEmpty()){
-            inst = new Instruction(Instruction.Action.NULL, -1, -1);
+            inst = Instruction.newNullInst();
         }
     }
 
     boolean computePath(int dest){
-        int[] path = Algorithms.findPath(MainController.map, Constants.COLUMNS, pos, dest);
+        int[] path = Algorithms.findPath(MainController.getIntCreatureMap(), Constants.COLUMNS, pos, dest);
         if(path.length == 0){
             movePath = null;
-            inst = new Instruction(Instruction.Action.NULL, -1, -1);
+            inst = Instruction.newNullInst();
             return false;
         }
         movePath = new LinkedList<>();

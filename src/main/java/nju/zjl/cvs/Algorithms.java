@@ -7,7 +7,7 @@ import java.util.function.IntUnaryOperator;
 import com.google.common.collect.ComparisonChain;
 
 public class Algorithms {
-    public static int[] findPath(boolean[] map, int columns, int src, int dest){
+    public static int[] findPath(int[] map, int columns, int src, int dest){
         PriorityQueue<Node> openList = new PriorityQueue<>();  
         int len = map.length;
         boolean[] visited = new boolean[len];
@@ -43,7 +43,7 @@ public class Algorithms {
         return result;
     }
 
-    private static void updateFringe(boolean[] map, int columns, Node n, IntUnaryOperator countingH, PriorityQueue<Node> openList, boolean[] visited){
+    private static void updateFringe(int[] map, int columns, Node n, IntUnaryOperator countingH, PriorityQueue<Node> openList, boolean[] visited){
         int[] adjacency;
         if(n.p % columns == 0){
             adjacency = new int[]{n.p + 1, n.p - columns, n.p + columns};
@@ -56,7 +56,7 @@ public class Algorithms {
         }
 
         for(int adj : adjacency){
-            if(adj < 0 || adj >= map.length || map[adj] || visited[adj]){
+            if(adj < 0 || adj >= map.length || map[adj] == 1 || visited[adj]){
                 continue;
             }
             openList.add(new Node(adj, n.g + 1, countingH.applyAsInt(adj), n));
