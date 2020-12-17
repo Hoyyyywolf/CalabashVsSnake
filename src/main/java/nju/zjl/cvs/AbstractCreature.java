@@ -6,6 +6,9 @@ abstract class AbstractCreature extends AbstractItem implements Interactive{
         
     }
 
+    abstract int getPos();
+    abstract int getCamp();
+
     protected int hp = 1;
     protected int atk = 0;
     protected int atkRange = 1;

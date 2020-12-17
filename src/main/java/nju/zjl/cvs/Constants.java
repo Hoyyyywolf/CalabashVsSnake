@@ -9,6 +9,6 @@ public class Constants {
     public static final int FPS = 30;
 
     //creature move speed, 15 frames(0.5s) to move 1 grid
-    public static final int CMS = 15;
+    public static final int CREATUREMOVECD = 15;
 
 }

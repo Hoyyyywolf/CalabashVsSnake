@@ -9,6 +9,7 @@ import static com.google.common.base.Preconditions.*;
 
 public class MainController {
     static Map<Integer, AbstractCreature> ctPosMap = new HashMap<>();
+    static Map<Integer, AbstractCreature> ctIdMap = new HashMap<>();
 
     static int[] getIntCreatureMap(){
         return IntStream.range(0, Constants.ROWS * Constants.COLUMNS).
@@ -24,9 +25,7 @@ public class MainController {
         ctPosMap.put(dest, ctPosMap.remove(src));
     }
 
-    /*
     static AbstractCreature getCreatureById(int id){
-        
+        return ctIdMap.get(id);    
     }
-    */
 }

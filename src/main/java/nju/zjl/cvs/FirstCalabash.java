@@ -26,7 +26,7 @@ public class FirstCalabash{
         int next = movePath.pollFirst();
         MainController.moveCreature(pos, next);
         pos = next;
-        moveCD = Constants.CMS;
+        moveCD = Constants.CREATUREMOVECD;
         if(movePath.isEmpty()){ //reach the dest, remove the instruction
             inst = Instruction.newNullInst();
         }
@@ -34,7 +34,7 @@ public class FirstCalabash{
 
     boolean computePath(int dest){
         int[] path = Algorithms.findPath(MainController.getIntCreatureMap(), Constants.COLUMNS, pos, dest);
-        if(path.length == 0){
+        if(path.length == 0){ //cannot move to dest, instruction was illeagal, drop it
             movePath = null;
             inst = Instruction.newNullInst();
             return false;
@@ -48,8 +48,31 @@ public class FirstCalabash{
     }
 
     void autoAttack(){
-        return;
+        
     }
+
+    void generateAffector(int target){
+        if(atkCD > 0){
+            return;
+        }
+        //generate affector
+    }
+
+    void attack(int target){
+        AbstractCreature ct = MainController.getCreatureById(target);
+        if(ct == null){ //target was already dead, drop instruction
+            inst = Instruction.newNullInst();
+            return;
+        }
+        int tPos = ct.getPos();
+        int dis = Math.max(Math.abs(pos - tPos) / Constants.COLUMNS, Math.abs(pos - tPos) % Constants.COLUMNS);
+        if(dis > atkRange){ //out of attack range, first try to move towards it
+            moveTo(tPos);
+            return;
+        }
+        generateAffector(target);
+    }
+
 
     void update(){
         moveCD -= 1;
@@ -76,6 +99,7 @@ public class FirstCalabash{
     int atkRange;
     int moveCD;
     int atkCD;
+    int camp;
     Instruction inst;
     LinkedList<Integer> movePath;
 }
