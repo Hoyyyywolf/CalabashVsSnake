@@ -15,21 +15,19 @@ public class FirstCalabash{
         if(moveCD > 0){
             return;
         }
-        if(movePath == null && !computePath(dest)){
-            return;
-        }
-        int next = movePath.peek();
-        if(MainController.getCreatureByPos(next) != null){
-            if(!computePath(dest)){
+        if( movePath == null || //has not yet compute path 
+            movePath.peekLast() != dest || //dest has changed
+            MainController.getCreatureByPos(movePath.peekFirst()) != null //map has changed, next hop was peroccupied 
+            ){
+            if(computePath(dest)){
                 return;
             }
-            next = movePath.peek();
         }
+        int next = movePath.pollFirst();
         MainController.moveCreature(pos, next);
         pos = next;
         moveCD = Constants.CMS;
-        movePath.poll();
-        if(movePath.isEmpty()){
+        if(movePath.isEmpty()){ //reach the dest, remove the instruction
             inst = Instruction.newNullInst();
         }
     }
@@ -45,7 +43,7 @@ public class FirstCalabash{
         IntStream.of(path).
             boxed().
             forEach(movePath::add);
-        movePath.poll();
+        movePath.pollFirst();
         return true;
     }
 
