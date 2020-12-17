@@ -10,5 +10,8 @@ public class Constants {
 
     //creature move speed, 15 frames(0.5s) to move 1 grid
     public static final int CREATUREMOVECD = 15;
+    public static final int CREATUREATTACKCD = 45;
+
+    public static final int BULLETSPEED = 10;
 
 }
