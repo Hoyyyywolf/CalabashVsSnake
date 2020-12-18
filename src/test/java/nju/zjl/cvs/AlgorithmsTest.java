@@ -9,7 +9,7 @@ import org.junit.*;
 
 public class AlgorithmsTest {
     @Test
-    public void testFindPath(){
+    public void testFindPath1(){
         int[] map = {
             0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0,
@@ -29,5 +29,19 @@ public class AlgorithmsTest {
             assertTrue("path is not adjacent", (x1 == x2 && Math.abs(y1 - y2) == 1) || (y1 == y2 && Math.abs(x1 - x2) == 1));
         }
         System.out.println(Arrays.toString(ret));
+    }
+
+    @Test
+    public void testFindPath2(){
+        int[] map = {
+            0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0,
+            1, 1, 1, 0, 0, 0,
+            0, 0, 1, 0, 0, 0,
+            0, 0, 1, 0, 0, 0,
+            0, 0, 1, 0, 0, 0
+        };
+        int[] ret = Algorithms.findPath(map, 6, 19, 1);
+        assertEquals(0, ret.length);
     }
 }

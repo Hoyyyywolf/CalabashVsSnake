@@ -136,6 +136,9 @@ public class Creature {
         return camp;
     }
 
+    int getHp(){
+        return hp;
+    }
 
     private static int identifier = 0;
 

@@ -1,9 +1,9 @@
 package nju.zjl.cvs;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.Queue;
 import java.util.stream.IntStream;
 import static com.google.common.base.Preconditions.*;
 
@@ -20,6 +20,13 @@ public class ItemManager {
         return IntStream.range(0, Constants.ROWS * Constants.COLUMNS).
                     map(i -> ctPosMap.containsKey(i) ? 1 : 0).
                     toArray();
+    }
+
+    public void addCreature(Creature ct){
+        int pos = ct.getPos();
+        checkArgument(!ctPosMap.containsKey(pos), "pos %s already has a creature but tried to add another to here", pos);
+        ctIdMap.put(ct.getId(), ct);
+        ctPosMap.put(pos, ct);
     }
 
     public void moveCreature(int src, int dest){
@@ -39,11 +46,11 @@ public class ItemManager {
     }
 
     public void addAffector(Affector at){
-        atSet.add(at);
+        atQueue.add(at);
     }
 
     public void removeAffector(Affector at){
-        atSet.remove(at);
+        atQueue.remove(at);
         /*
         TODO 
         remove the affector from drwable items if it's drawable, etc
@@ -53,5 +60,5 @@ public class ItemManager {
     protected Map<Integer, Creature> ctPosMap = new HashMap<>();
     protected Map<Integer, Creature> ctIdMap = new HashMap<>();
 
-    protected Set<Affector> atSet = new TreeSet<>();
+    protected Queue<Affector> atQueue = new LinkedList<>();
 }

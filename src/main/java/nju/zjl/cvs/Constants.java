@@ -12,7 +12,7 @@ public class Constants {
     public static final int CREATUREMOVECD = 15;
     public static final int CREATUREATTACKCD = 45;
 
-    public static final int BULLETSPEED = 10;
+    public static final int BULLETSPEED = 50;
 
     public static final int GRIDWIDTH = 50;
     public static final int GRIDHEIGHT = 50;
