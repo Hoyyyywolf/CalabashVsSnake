@@ -14,8 +14,9 @@ public class Constants {
 
     public static final int BULLETSPEED = 10;
 
-    private static final int GRIDWIDTH = 50;
-    private static final int GRIDHEIGHT = 50;
+    public static final int GRIDWIDTH = 50;
+    public static final int GRIDHEIGHT = 50;
+
 
     public static int bulletPos2CreaturePos(int x, int y){
         return x / GRIDWIDTH + y / GRIDHEIGHT * COLUMNS;

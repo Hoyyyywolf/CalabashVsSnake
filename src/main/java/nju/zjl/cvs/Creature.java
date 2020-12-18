@@ -3,7 +3,21 @@ package nju.zjl.cvs;
 import java.util.LinkedList;
 import java.util.stream.IntStream;
 
-abstract class Creature {
+public class Creature {
+    public Creature(Camp camp, int pos, int hp, int atk, int atkRange, BulletSupplier bullet){
+        this.id = identifier++;
+        this.camp = camp;
+        this.pos = pos;
+        this.hp = hp;
+        this.atk = atk;
+        this.atkRange = atkRange;
+        this.inst = Instruction.newNullInst();
+        this.moveCD = 0;
+        this.atkCD = 0;
+        this.movePath = null;
+        this.bullet = bullet;
+    }
+
     void update(ItemManager items){
         moveCD -= 1;
         atkCD -= 1;
@@ -80,7 +94,8 @@ abstract class Creature {
         if(atkCD > 0){
             return;
         }
-        generateBullet(target, items);
+        int[] ret = Constants.creaturePos2BulletPos(pos);
+        items.addAffector(bullet.get(ret[0], ret[1], target, atk));
         atkCD = Constants.CREATUREATTACKCD;
     }
 
@@ -99,13 +114,14 @@ abstract class Creature {
                 if(ct == null || ct.getCamp() == camp){
                     continue;
                 }
-                generateBullet(ct.getId(), items);
+                int[] ret = Constants.creaturePos2BulletPos(pos);
+                items.addAffector(bullet.get(ret[0], ret[1], ct.getId(), atk));
                 atkCD = Constants.CREATUREATTACKCD;
             }
     }
 
     protected void addBuff(Buff buff){
-
+        //TODO
     }
 
     int getId(){
@@ -120,20 +136,6 @@ abstract class Creature {
         return camp;
     }
 
-    protected Creature(Camp camp, int pos, int hp, int atk, int atkRange){
-        this.id = identifier++;
-        this.camp = camp;
-        this.pos = pos;
-        this.hp = hp;
-        this.atk = atk;
-        this.atkRange = atkRange;
-        this.inst = Instruction.newNullInst();
-        this.moveCD = 0;
-        this.atkCD = 0;
-        this.movePath = null;
-    }
-    
-    abstract void generateBullet(int target, ItemManager items);
 
     private static int identifier = 0;
 
@@ -151,4 +153,10 @@ abstract class Creature {
     protected int atk;
     protected int atkCD;
     protected int atkRange;
+
+    protected BulletSupplier bullet;
+}
+
+interface BulletSupplier{
+    Affector get(int x, int y, int target, int damage);        
 }

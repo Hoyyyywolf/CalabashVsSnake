@@ -50,8 +50,8 @@ public class ItemManager {
         */
     }
 
-    private Map<Integer, Creature> ctPosMap = new HashMap<>();
-    private Map<Integer, Creature> ctIdMap = new HashMap<>();
+    protected Map<Integer, Creature> ctPosMap = new HashMap<>();
+    protected Map<Integer, Creature> ctIdMap = new HashMap<>();
 
-    private Set<Affector> atSet = new TreeSet<>();
+    protected Set<Affector> atSet = new TreeSet<>();
 }

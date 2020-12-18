@@ -1,15 +1,6 @@
 package nju.zjl.cvs;
 
 public class Bullet extends Affector {
-    public Bullet(int x, int y, int target, int damage, int speed, Buff buff){
-        this.x = x;
-        this.y = y;
-        this.target = target;
-        this.damage = damage;
-        this.speed = speed;
-        this.buff = buff;
-    }
-
     @Override
     void update(ItemManager items){
         Creature ct = items.getCreatureById(target);
@@ -35,24 +26,30 @@ public class Bullet extends Affector {
         int deltaX = destX - x;
         int deltaY = destY - y;
         double dis = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-        if(dis <= speed){
+        if(dis <= Constants.BULLETSPEED){
             x = destX;
             y = destY;
         }
         else{
-            double s = speed / dis;
+            double s = Constants.BULLETSPEED / dis;
             x += deltaX * s;
             y += deltaY * s;
         }
     }
 
+    public Bullet(int x, int y, int target, int damage, Buff buff){
+        this.x = x;
+        this.y = y;
+        this.target = target;
+        this.damage = damage;
+        this.buff = buff;
+    }
     
     protected int x;
     protected int y;
 
     protected int target;
     protected int damage;
-    protected int speed;
 
     protected Buff buff;
 }
