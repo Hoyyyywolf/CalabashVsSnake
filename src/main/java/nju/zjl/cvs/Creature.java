@@ -3,7 +3,7 @@ package nju.zjl.cvs;
 import java.util.LinkedList;
 import java.util.stream.IntStream;
 
-abstract class AbstractCreature {
+abstract class Creature {
     void update(ItemManager items){
         moveCD -= 1;
         atkCD -= 1;
@@ -24,7 +24,12 @@ abstract class AbstractCreature {
         }
     }
 
-    void moveTo(int dest, ItemManager items){
+    protected boolean hurt(int damage){
+        hp -= damage;
+        return hp <= 0;
+    }
+
+    protected void moveTo(int dest, ItemManager items){
         if(moveCD > 0){
             return;
         }
@@ -45,7 +50,7 @@ abstract class AbstractCreature {
         }
     }
 
-    boolean computePath(int dest, int[] map){
+    protected boolean computePath(int dest, int[] map){
         int[] path = Algorithms.findPath(map, Constants.COLUMNS, pos, dest);
         if(path.length == 0){ //cannot move to dest, instruction was illeagal, drop it
             movePath = null;
@@ -60,8 +65,8 @@ abstract class AbstractCreature {
         return true;
     }
 
-    void attack(int target, ItemManager items){
-        AbstractCreature ct = items.getCreatureById(target);
+    protected void attack(int target, ItemManager items){
+        Creature ct = items.getCreatureById(target);
         if(ct == null){ //target was already dead, drop instruction
             inst = Instruction.newNullInst();
             return;
@@ -75,11 +80,11 @@ abstract class AbstractCreature {
         if(atkCD > 0){
             return;
         }
-        generateAffector(target, items);
+        generateBullet(target, items);
         atkCD = Constants.CREATUREATTACKCD;
     }
 
-    void autoAttack(ItemManager items){
+    protected void autoAttack(ItemManager items){
         if(atkCD > 0){
             return;
         }
@@ -90,13 +95,17 @@ abstract class AbstractCreature {
                 if(x + i < 0 || x + i >= Constants.ROWS || y + j < 0 || y + j >= Constants.COLUMNS){
                     continue;
                 }
-                AbstractCreature ct = items.getCreatureByPos((x + i) * Constants.COLUMNS + y + j);
+                Creature ct = items.getCreatureByPos((x + i) * Constants.COLUMNS + y + j);
                 if(ct == null || ct.getCamp() == camp){
                     continue;
                 }
-                generateAffector(ct.getId(), items);
+                generateBullet(ct.getId(), items);
                 atkCD = Constants.CREATUREATTACKCD;
             }
+    }
+
+    protected void addBuff(Buff buff){
+
     }
 
     int getId(){
@@ -107,24 +116,29 @@ abstract class AbstractCreature {
         return pos;
     }
 
-    int getCamp(){
+    Camp getCamp(){
         return camp;
     }
 
-    protected AbstractCreature(int camp, int pos, int hp, int atkRange){
+    protected Creature(Camp camp, int pos, int hp, int atk, int atkRange){
         this.id = identifier++;
         this.camp = camp;
         this.pos = pos;
         this.hp = hp;
+        this.atk = atk;
         this.atkRange = atkRange;
+        this.inst = Instruction.newNullInst();
+        this.moveCD = 0;
+        this.atkCD = 0;
+        this.movePath = null;
     }
     
-    abstract void generateAffector(int target, ItemManager items);
+    abstract void generateBullet(int target, ItemManager items);
 
     private static int identifier = 0;
 
     protected int id;
-    protected int camp;
+    protected Camp camp;
     protected int pos;
 
     protected Instruction inst;

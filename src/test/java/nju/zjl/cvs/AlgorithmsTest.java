@@ -10,13 +10,13 @@ import org.junit.*;
 public class AlgorithmsTest {
     @Test
     public void testFindPath(){
-        boolean[] map = {
-            false, false, false, false, false, false,
-            false, false, false, false, false, false,
-            true , true , true , false, false, false,
-            false, false, true , false, false, false,
-            false, false, true , false, false, false,
-            false, false, false, false, false, false
+        int[] map = {
+            0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0,
+            1, 1, 1, 0, 0, 0,
+            0, 0, 1, 0, 0, 0,
+            0, 0, 1, 0, 0, 0,
+            0, 0, 0, 0, 0, 0
         };
         int[] ret = Algorithms.findPath(map, 6, 19, 1);
         assertEquals("start point wrong", 19, ret[0]);

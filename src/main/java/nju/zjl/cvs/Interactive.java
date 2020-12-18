@@ -1,5 +1,5 @@
 package nju.zjl.cvs;
 
-interface Interactive{
+interface Interactive {
     void execute(Instruction inst);
 }

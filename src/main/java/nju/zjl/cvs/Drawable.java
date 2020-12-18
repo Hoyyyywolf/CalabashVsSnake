@@ -1,5 +1,5 @@
 package nju.zjl.cvs;
 
-interface Drawable{
+interface Drawable {
     void draw();
 }
