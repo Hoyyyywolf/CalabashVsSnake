@@ -3,6 +3,7 @@ package nju.zjl.cvs;
 import java.util.LinkedList;
 import java.util.stream.IntStream;
 
+
 public class Creature {
     public Creature(Camp camp, int pos, int hp, int atk, int atkRange, BulletSupplier bullet){
         this.id = identifier++;
@@ -26,7 +27,7 @@ public class Creature {
                 autoAttack(items);
                 break;
             case MOVE:
-                moveTo(inst.pos, items);
+                moveTo(inst.pos, items, 0);
                 break;
             case ATTACK:
                 attack(inst.target, items);
@@ -43,7 +44,7 @@ public class Creature {
         return hp <= 0;
     }
 
-    protected void moveTo(int dest, ItemManager items){
+    protected void moveTo(int dest, ItemManager items, int pathType){
         if(moveCD > 0){
             return;
         }
@@ -51,7 +52,7 @@ public class Creature {
             movePath.peekLast() != dest || //dest has changed
             items.getCreatureByPos(movePath.peekFirst()) != null //map has changed, next hop was peroccupied 
             ){
-            if(computePath(dest, items.getIntCreatureMap())){
+            if(!computePath(dest, items.getIntCreatureMap(), pathType)){
                 return;
             }
         }
@@ -59,13 +60,20 @@ public class Creature {
         items.moveCreature(pos, next);
         pos = next;
         moveCD = Constants.CREATUREMOVECD;
-        if(movePath.isEmpty()){ //reach the dest, remove the instruction
+        if(movePath.isEmpty() && inst.action == Instruction.Action.MOVE){ //reach the dest, remove the instruction
             inst = Instruction.newNullInst();
+            movePath = null;
         }
     }
 
-    protected boolean computePath(int dest, int[] map){
-        int[] path = Algorithms.findPath(map, Constants.COLUMNS, pos, dest);
+    protected boolean computePath(int dest, int[] map, int pathType){
+        int[] path;
+        if(pathType == 0){
+            path = Algorithms.findPath(map, Constants.COLUMNS, pos, dest);
+        }
+        else{
+            path = Algorithms.findAtkPath(map, Constants.COLUMNS, pos, dest, atkRange);
+        }
         if(path.length == 0){ //cannot move to dest, instruction was illeagal, drop it
             movePath = null;
             inst = Instruction.newNullInst();
@@ -88,7 +96,7 @@ public class Creature {
         int tPos = ct.getPos();
         int dis = Math.max(Math.abs(pos - tPos) / Constants.COLUMNS, Math.abs(pos - tPos) % Constants.COLUMNS);
         if(dis > atkRange){ //out of attack range, first try to move towards it
-            moveTo(tPos, items);
+            moveTo(tPos, items, 1);
             return;
         }
         if(atkCD > 0){

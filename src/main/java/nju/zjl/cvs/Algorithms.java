@@ -28,6 +28,28 @@ public class Algorithms {
         return new int[0];
     }
 
+    public static int[] findAtkPath(int[] map, int columns, int src, int dest, int atkRange){
+        PriorityQueue<Node> openList = new PriorityQueue<>();  
+        int len = map.length;
+        boolean[] visited = new boolean[len];
+        IntUnaryOperator countingH = x -> Math.abs(x - dest) / columns + Math.abs(x - dest) % columns;
+
+        openList.add(new Node(src, 0, countingH.applyAsInt(src), new Node()));
+        while(!openList.isEmpty()){
+            Node n = openList.poll();
+            if(visited[n.p]){
+                continue;
+            }
+            visited[n.p] = true;
+            int dis = Math.max(Math.abs(dest - n.p) / Constants.COLUMNS, Math.abs(dest - n.p) % Constants.COLUMNS);
+            if(dis <= atkRange){
+                return resolvePath(n);
+            }
+            updateFringe(map, columns, n, countingH, openList, visited);
+        }
+        return new int[0];
+    }
+
     private static int[] resolvePath(Node last){
         Deque<Integer> path = new ArrayDeque<>();
         Node c = last;
