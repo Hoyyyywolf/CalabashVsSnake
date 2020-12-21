@@ -1,7 +1,9 @@
 package nju.zjl.cvs;
 
+import javafx.scene.paint.Color;
+
 public class AffectorFactory {
-    public static Bullet generatePlainBullet(int x, int y, int target, int damage){
-        return new Bullet(x, y, target, damage, null);
+    public static Affector generatePlainBullet(int x, int y, int target, int damage){
+        return new Bullet(x, y, target, damage, Color.BLACK, null);
     }
 }

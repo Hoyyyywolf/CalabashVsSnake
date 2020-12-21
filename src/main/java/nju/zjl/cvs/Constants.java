@@ -2,8 +2,8 @@ package nju.zjl.cvs;
 
 public class Constants {
     //map size
-    public static final int ROWS = 10;
-    public static final int COLUMNS = 15;
+    public static final int ROWS = 5;
+    public static final int COLUMNS = 10;
 
     //game FPS
     public static final int FPS = 30;
@@ -14,8 +14,8 @@ public class Constants {
 
     public static final int BULLETSPEED = 50;
 
-    public static final int GRIDWIDTH = 50;
-    public static final int GRIDHEIGHT = 50;
+    public static final int GRIDWIDTH = 90;
+    public static final int GRIDHEIGHT = 120;
 
 
     public static int bulletPos2CreaturePos(int x, int y){

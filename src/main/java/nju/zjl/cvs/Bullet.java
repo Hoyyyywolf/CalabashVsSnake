@@ -1,6 +1,9 @@
 package nju.zjl.cvs;
 
-public class Bullet extends Affector {
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+
+public class Bullet extends Affector{
     @Override
     void update(ItemManager items){
         Creature ct = items.getCreatureById(target);
@@ -22,6 +25,12 @@ public class Bullet extends Affector {
         }
     }
 
+    @Override
+    public void draw(GraphicsContext gc){
+        gc.setFill(color);
+        gc.fillOval(x - 4, y - 4, 8, 8);
+    }
+
     void moveTo(int destX, int destY){
         int deltaX = destX - x;
         int deltaY = destY - y;
@@ -37,12 +46,13 @@ public class Bullet extends Affector {
         }
     }
 
-    public Bullet(int x, int y, int target, int damage, Buff buff){
+    public Bullet(int x, int y, int target, int damage, Color color,Buff buff){
         this.x = x;
         this.y = y;
         this.target = target;
         this.damage = damage;
         this.buff = buff;
+        this.color = color;
     }
     
     protected int x;
@@ -51,5 +61,6 @@ public class Bullet extends Affector {
     protected int target;
     protected int damage;
 
+    protected Color color;
     protected Buff buff;
 }

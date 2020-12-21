@@ -1,11 +1,12 @@
 package nju.zjl.cvs;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.stream.IntStream;
-import static com.google.common.base.Preconditions.*;
 
 public class ItemManager {
     public Creature getCreatureByPos(int pos){
@@ -18,8 +19,8 @@ public class ItemManager {
 
     public int[] getIntCreatureMap(){
         return IntStream.range(0, Constants.ROWS * Constants.COLUMNS).
-                    map(i -> ctPosMap.containsKey(i) ? 1 : 0).
-                    toArray();
+                map(i -> ctPosMap.containsKey(i) ? 1 : 0).
+                toArray();
     }
 
     public void addCreature(Creature ct){
@@ -39,10 +40,6 @@ public class ItemManager {
         checkArgument(ctIdMap.containsKey(id), "creature %s is not existed but tried to remove it", id);
         ctPosMap.remove(ctIdMap.get(id).getPos());
         ctIdMap.remove(id);
-        /*
-        TODO 
-        remove the creature from drwable items, etc
-        */
     }
 
     public void addAffector(Affector at){
@@ -51,10 +48,12 @@ public class ItemManager {
 
     public void removeAffector(Affector at){
         atQueue.remove(at);
-        /*
-        TODO 
-        remove the affector from drwable items if it's drawable, etc
-        */
+    }
+
+    public void update(){
+        for(Creature c : ctPosMap.values()){
+            c.update(this);
+        }
     }
 
     protected Map<Integer, Creature> ctPosMap = new HashMap<>();
