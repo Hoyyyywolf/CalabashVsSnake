@@ -165,6 +165,10 @@ public class Creature implements Drawable{
         return hp;
     }
 
+    void setInst(Instruction inst){
+        this.inst = inst;
+    }
+
     private static int identifier = 0;
 
     protected int id;

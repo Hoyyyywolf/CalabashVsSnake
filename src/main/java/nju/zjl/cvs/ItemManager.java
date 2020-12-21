@@ -50,10 +50,12 @@ public class ItemManager {
         atQueue.remove(at);
     }
 
-    public void update(){
-        for(Creature c : ctPosMap.values()){
-            c.update(this);
-        }
+    public Creature[] getCreatures(){
+        return ctPosMap.values().toArray(new Creature[0]);
+    }
+
+    public Affector[] getAffectors(){
+        return atQueue.toArray(new Affector[0]);
     }
 
     protected Map<Integer, Creature> ctPosMap = new HashMap<>();
