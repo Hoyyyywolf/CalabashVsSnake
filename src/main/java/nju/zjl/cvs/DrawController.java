@@ -1,6 +1,7 @@
 package nju.zjl.cvs;
 
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import javafx.application.Platform;
@@ -26,7 +27,7 @@ public class DrawController implements Runnable {
                 Stream.of(items.getAffectors()).forEach(a -> a.draw(gc));
                 sem.release();
             });
-            Thread.sleep(1000 / Constants.FPS);
+            TimeUnit.MILLISECONDS.sleep(1000 / Constants.FPS);
         }catch(InterruptedException exception){
             exception.printStackTrace();
         }

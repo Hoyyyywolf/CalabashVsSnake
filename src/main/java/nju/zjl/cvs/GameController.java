@@ -1,6 +1,7 @@
 package nju.zjl.cvs;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 public class GameController implements Callable<Camp> {
@@ -15,7 +16,7 @@ public class GameController implements Callable<Camp> {
             times++;
             update();
             try{
-                Thread.sleep(1000 / Constants.FPS);
+                TimeUnit.MILLISECONDS.sleep(1000 / Constants.FPS);
             }catch(InterruptedException exception){
                 exception.printStackTrace();
             }
