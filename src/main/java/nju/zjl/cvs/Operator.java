@@ -1,5 +1,5 @@
 package nju.zjl.cvs;
 
-abstract class Operator {
-    abstract Operation[] getLogicFrames(int logicFrame);
+interface Operator {
+    Operation[] getLogicFrames(int logicFrame);
 }

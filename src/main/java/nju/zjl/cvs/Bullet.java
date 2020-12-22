@@ -1,8 +1,8 @@
 package nju.zjl.cvs;
 
-public class Bullet extends Affector {
+public class Bullet implements Affector {
     @Override
-    void update(ItemManager items){
+    public void update(ItemManager items){
         Creature ct = items.getCreatureById(target);
         if(ct == null){
             items.removeAffector(this);

@@ -58,6 +58,19 @@ public class ItemManager {
         return atQueue.toArray(new Affector[0]);
     }
 
+    public ItemManager(){
+        addCreature(CreatureFactory.generateCalabash(3, 4, "red"));
+        addCreature(CreatureFactory.generateCalabash(2, 2, "orange"));
+        addCreature(CreatureFactory.generateCalabash(2, 3, "yellow"));
+        addCreature(CreatureFactory.generateCalabash(2, 5, "green"));
+        addCreature(CreatureFactory.generateCalabash(2, 6, "blue"));
+        addCreature(CreatureFactory.generateCalabash(1, 2, "cyan"));
+        addCreature(CreatureFactory.generateCalabash(1, 3, "purple"));
+        addCreature(CreatureFactory.generateGranpa(1, 4));
+        addCreature(CreatureFactory.generateScorpion(3, 6));
+        addCreature(CreatureFactory.generateSnake(3, 8));
+    }
+
     protected Map<Integer, Creature> ctPosMap = new HashMap<>();
     protected Map<Integer, Creature> ctIdMap = new HashMap<>();
 

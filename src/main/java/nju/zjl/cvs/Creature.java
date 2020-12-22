@@ -20,7 +20,7 @@ public class Creature {
         this.imgName = imgName;
     }
 
-    void update(ItemManager items){
+    public void update(ItemManager items){
         moveCD -= 1;
         atkCD -= 1;
         switch(inst.action){
@@ -126,6 +126,7 @@ public class Creature {
                 int[] ret = Constants.creaturePos2BulletPos(pos);
                 items.addAffector(bullet.get(ret[0], ret[1], ct.getId(), atk));
                 atkCD = Constants.CREATUREATTACKCD;
+                return;
             }
     }
 
@@ -147,6 +148,10 @@ public class Creature {
 
     int getHp(){
         return hp;
+    }
+
+    int getMaxHp(){
+        return maxHp;
     }
 
     String getImgName(){
