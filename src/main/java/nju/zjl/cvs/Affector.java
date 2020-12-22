@@ -1,5 +1,5 @@
 package nju.zjl.cvs;
 
-abstract class Affector implements Drawable{
+abstract class Affector{
     abstract void update(ItemManager items);
 }

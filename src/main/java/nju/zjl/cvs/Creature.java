@@ -1,14 +1,9 @@
 package nju.zjl.cvs;
 
-import java.net.URL;
 import java.util.LinkedList;
 import java.util.stream.IntStream;
 
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-
-public class Creature implements Drawable{
+public class Creature {
     public Creature(Camp camp, int pos, int maxHp, int atk, int atkRange, BulletSupplier bullet, String imgName){
         this.id = identifier++;
         this.camp = camp;
@@ -22,18 +17,7 @@ public class Creature implements Drawable{
         this.atkCD = 0;
         this.movePath = null;
         this.bullet = bullet;
-        URL url= CreatureFactory.class.getClassLoader().getResource("image/" + imgName);
-        this.img = new Image(url.toString(), Constants.GRIDWIDTH - 20, Constants.GRIDHEIGHT - 30, true, true);
-    }
-
-    @Override
-    public void draw(GraphicsContext gc){
-        int ltx = (pos % Constants.COLUMNS) * Constants.GRIDWIDTH;
-        int lty = (pos / Constants.COLUMNS) * Constants.GRIDHEIGHT;
-        gc.drawImage(img, ltx + 10, lty + 15);
-        gc.setFill(Color.RED);
-        gc.fillRect(ltx + 5, lty + 5, (Constants.GRIDWIDTH - 10) * hp / 500, 10);
-        gc.strokeRect(ltx + 5, lty + 5, Constants.GRIDWIDTH - 10, 10);
+        this.imgName = imgName;
     }
 
     void update(ItemManager items){
@@ -165,6 +149,10 @@ public class Creature implements Drawable{
         return hp;
     }
 
+    String getImgName(){
+        return imgName;
+    }
+
     void setInst(Instruction inst){
         this.inst = inst;
     }
@@ -189,7 +177,7 @@ public class Creature implements Drawable{
 
     protected BulletSupplier bullet;
 
-    protected Image img;
+    protected String imgName;
 }
 
 interface BulletSupplier{
