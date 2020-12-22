@@ -1,17 +1,20 @@
 package nju.zjl.cvs;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-public class GameController implements Callable<Camp> {
-    public GameController(ItemManager items, Operator operator){
+import javafx.application.Platform;
+
+public class GameController implements Runnable {
+    public GameController(ItemManager items, Operator operator, Consumer<Camp> gameEnd){
         this.items = items;
         this.operator = operator;
+        this.gameEnd = gameEnd;
     }
 
     @Override
-    public Camp call() {
+    public void run() {
         while(!gameOver()){
             times++;
             update();
@@ -21,7 +24,7 @@ public class GameController implements Callable<Camp> {
                 exception.printStackTrace();
             }
         }
-        return items.getCreatures()[0].getCamp();
+        Platform.runLater(() -> gameEnd.accept(items.getCreatures()[0].getCamp()));
     }
 
     void update(){
@@ -49,9 +52,10 @@ public class GameController implements Callable<Camp> {
         return Stream.of(creatures).allMatch(c -> c.getCamp() == camp); 
     }
 
-    private int logicTimer = Constants.FPS / 10;
-    private int logicFrame = 0;
-    private int times = 0;
-    private ItemManager items;
-    private Operator operator;
+    protected int logicTimer = Constants.FPS / 10;
+    protected int logicFrame = 0;
+    protected int times = 0;
+    protected ItemManager items;
+    protected Operator operator;
+    protected Consumer<Camp> gameEnd;
 }

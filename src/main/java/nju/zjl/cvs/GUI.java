@@ -2,7 +2,6 @@ package nju.zjl.cvs;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -13,42 +12,47 @@ import javafx.stage.Stage;
 
 public class GUI extends Application{    
     public void start(Stage primaryStage) throws Exception{
-        Platform.setImplicitExit(false);
-
-        Canvas canvas = new Canvas(Constants.GRIDWIDTH * Constants.COLUMNS, Constants.GRIDHEIGHT * Constants.ROWS);
-        Group root = new Group();
-        Scene scene = new Scene(root);
-        root.getChildren().add(canvas);
-        primaryStage.setScene(scene);
+        this.primaryStage = primaryStage;
+        primaryStage.setOnCloseRequest(e -> {
+            if(drawer != null){
+                drawer.gameOver();
+            }
+        });
         primaryStage.show();
-        canvas.getGraphicsContext2D().fillOval(7, 8, 15, 40);
-        ItemManager items = new ItemManager();
-
-        GameController game = new GameController(items, i -> new Operation[0]);
-        DrawController draw = new DrawController(items, canvas);
-        ExecutorService exec = Executors.newCachedThreadPool();
-        exec.execute(draw);
-        Future<Camp> ret = exec.submit(game);
-        //Camp winner = ret.get();
-        //draw.gameOver();
-        exec.shutdown();
-        //System.out.println(winner);
-        //Platform.exit();
+        newGame();
     }
 
     void gameOver(Camp winner){
-
+        drawer.gameOver();
+        //Platform.exit();
     }
     
     void newGame(){
-
+        primaryStage.setScene(gameScene);
+        ItemManager items = new ItemManager();
+        GameController game = new GameController(items, i -> new Operation[0], this::gameOver);
+        drawer = new DrawController(items, gameCanvas);
+        ExecutorService exec = Executors.newCachedThreadPool();
+        exec.execute(game);
+        exec.execute(drawer);
+        exec.shutdown();
     }
 
     public GUI(){
+        Platform.setImplicitExit(false);
 
+        gameCanvas = new Canvas(Constants.GRIDWIDTH * Constants.COLUMNS, Constants.GRIDHEIGHT * Constants.ROWS);
+        Group root = new Group();
+        gameScene = new Scene(root);
+        root.getChildren().add(gameCanvas);
     }
 
-    private Scene gameScene;
+    protected Stage primaryStage;
+
+    protected Scene gameScene;
+    protected Canvas gameCanvas;
+    protected DrawController drawer;
+
     private Scene recordScene;
     private Scene menuScene;
 }

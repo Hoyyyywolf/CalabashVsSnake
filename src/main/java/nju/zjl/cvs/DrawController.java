@@ -1,6 +1,8 @@
 package nju.zjl.cvs;
 
-import java.net.URL;
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -18,8 +20,16 @@ public class DrawController implements Runnable{
         this.gameOver = false;
         this.items = items;
         this.canvas = canvas;
-
-
+        try{
+            Path root = Paths.get(DrawController.class.getClassLoader().getResource("").toURI());
+            root = root.resolve("image");
+            for(File f : root.toFile().listFiles()){
+                String name = f.getName();
+                creatureImageMap.put(name.substring(0, name.lastIndexOf(".")), new Image(f.toURI().toURL().toString(), Constants.GRIDWIDTH - 20, Constants.GRIDHEIGHT - 30, true, true));
+            }
+        }catch(Exception exception){
+            exception.printStackTrace();
+        }
         colorMap.put("black", Color.BLACK);
     }
 
@@ -61,11 +71,6 @@ public class DrawController implements Runnable{
 
     public void gameOver(){
         gameOver = true;
-    }
-
-    private Image getImage(String imgName){
-        URL url = DrawController.class.getClassLoader().getResource("image/" + imgName);
-        return new Image(url.toString(), Constants.GRIDWIDTH - 20, Constants.GRIDHEIGHT - 30, true, true);
     }
 
     protected boolean gameOver;
