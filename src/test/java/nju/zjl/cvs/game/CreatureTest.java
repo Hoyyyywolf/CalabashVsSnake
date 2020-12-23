@@ -1,4 +1,4 @@
-package nju.zjl.cvs;
+package nju.zjl.cvs.game;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import nju.zjl.cvs.game.Constants.Camp;
 
 
 public class CreatureTest {

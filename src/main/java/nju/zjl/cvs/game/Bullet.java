@@ -1,6 +1,15 @@
-package nju.zjl.cvs;
+package nju.zjl.cvs.game;
 
 public class Bullet implements Affector {
+    public Bullet(int x, int y, int target, int damage, String color,Buff buff){
+        this.x = x;
+        this.y = y;
+        this.target = target;
+        this.damage = damage;
+        this.buff = buff;
+        this.color = color;
+    }
+    
     @Override
     public void update(ItemManager items){
         Creature ct = items.getCreatureById(target);
@@ -22,7 +31,19 @@ public class Bullet implements Affector {
         }
     }
 
-    void moveTo(int destX, int destY){
+    public int getX(){
+        return x;
+    }
+
+    public int getY(){
+        return y;
+    }
+
+    public String getColor(){
+        return color;
+    }
+
+    protected void moveTo(int destX, int destY){
         int deltaX = destX - x;
         int deltaY = destY - y;
         double dis = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
@@ -35,27 +56,6 @@ public class Bullet implements Affector {
             x += deltaX * s;
             y += deltaY * s;
         }
-    }
-
-    int getX(){
-        return x;
-    }
-
-    int getY(){
-        return y;
-    }
-
-    String getColor(){
-        return color;
-    }
-
-    public Bullet(int x, int y, int target, int damage, String color,Buff buff){
-        this.x = x;
-        this.y = y;
-        this.target = target;
-        this.damage = damage;
-        this.buff = buff;
-        this.color = color;
     }
     
     protected int x;

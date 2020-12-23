@@ -1,4 +1,4 @@
-package nju.zjl.cvs;
+package nju.zjl.cvs.client;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -14,6 +14,11 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import nju.zjl.cvs.game.Affector;
+import nju.zjl.cvs.game.Bullet;
+import nju.zjl.cvs.game.Constants;
+import nju.zjl.cvs.game.Creature;
+import nju.zjl.cvs.game.ItemManager;
 
 public class DrawController implements Runnable{
     public DrawController(ItemManager items, Canvas canvas){

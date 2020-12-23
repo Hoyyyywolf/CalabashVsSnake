@@ -1,4 +1,6 @@
-package nju.zjl.cvs;
+package nju.zjl.cvs.game;
+
+import nju.zjl.cvs.game.Constants.Camp;
 
 public class CreatureFactory {
     public static Creature generatePlainCreature(int x, int y, Camp camp){

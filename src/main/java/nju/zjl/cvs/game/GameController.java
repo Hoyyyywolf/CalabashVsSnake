@@ -1,10 +1,10 @@
-package nju.zjl.cvs;
+package nju.zjl.cvs.game;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import javafx.application.Platform;
+import nju.zjl.cvs.game.Constants.Camp;
 
 public class GameController implements Runnable {
     public GameController(ItemManager items, Operator operator, Consumer<Camp> gameEnd){
@@ -24,10 +24,14 @@ public class GameController implements Runnable {
                 exception.printStackTrace();
             }
         }
-        Platform.runLater(() -> gameEnd.accept(items.getCreatures()[0].getCamp()));
+        gameEnd.accept(items.getCreatures()[0].getCamp());
     }
 
-    void update(){
+    public void terminate(){
+        gameOver = true;
+    }
+
+    protected void update(){
         while(times > 0){
             if(logicTimer <= 0){
                 Operation[] ops = operator.getLogicFrames(logicFrame);
@@ -46,14 +50,10 @@ public class GameController implements Runnable {
         }
     }
 
-    boolean isGameOver(){
+    protected boolean isGameOver(){
         Creature[] creatures = items.getCreatures();
         Camp camp = creatures[0].getCamp();
         return Stream.of(creatures).allMatch(c -> c.getCamp() == camp); 
-    }
-
-    void terminate(){
-        gameOver = true;
     }
 
     protected boolean gameOver = false;

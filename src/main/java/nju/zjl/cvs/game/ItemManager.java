@@ -1,4 +1,4 @@
-package nju.zjl.cvs;
+package nju.zjl.cvs.game;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -58,7 +58,7 @@ public class ItemManager {
         return atQueue.toArray(new Affector[0]);
     }
 
-    public ItemManager(){
+    public void initDefaultCreatures(){
         addCreature(CreatureFactory.generateCalabash(3, 4, "red"));
         addCreature(CreatureFactory.generateCalabash(2, 2, "orange"));
         addCreature(CreatureFactory.generateCalabash(2, 3, "yellow"));

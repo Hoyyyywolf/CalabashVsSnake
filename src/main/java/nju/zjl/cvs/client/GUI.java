@@ -1,4 +1,4 @@
-package nju.zjl.cvs;
+package nju.zjl.cvs.client;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -11,6 +11,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import nju.zjl.cvs.game.Constants;
+import nju.zjl.cvs.game.Constants.Camp;
+import nju.zjl.cvs.game.GameController;
+import nju.zjl.cvs.game.ItemManager;
+import nju.zjl.cvs.game.Operation;
 
 public class GUI extends Application{
     protected Stage primaryStage;    

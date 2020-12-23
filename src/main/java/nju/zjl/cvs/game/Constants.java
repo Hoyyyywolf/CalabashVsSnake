@@ -1,6 +1,10 @@
-package nju.zjl.cvs;
+package nju.zjl.cvs.game;
 
 public class Constants {
+    public enum Camp {
+        CALABASH, SNAKE
+    }
+
     //map size
     public static final int ROWS = 8;
     public static final int COLUMNS = 10;
@@ -16,7 +20,6 @@ public class Constants {
 
     public static final int GRIDWIDTH = 70;
     public static final int GRIDHEIGHT = 80;
-
 
     public static int bulletPos2CreaturePos(int x, int y){
         return x / GRIDWIDTH + y / GRIDHEIGHT * COLUMNS;

@@ -1,9 +1,10 @@
-package nju.zjl.cvs;
+package nju.zjl.cvs.game;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.PriorityQueue;
 import java.util.function.IntUnaryOperator;
+
 import com.google.common.collect.ComparisonChain;
 
 public class Algorithms {

@@ -1,7 +1,10 @@
-package nju.zjl.cvs;
+package nju.zjl.cvs.game;
 
 import java.util.LinkedList;
 import java.util.stream.IntStream;
+
+import nju.zjl.cvs.game.Constants.Camp;
+
 
 public class Creature {
     public Creature(Camp camp, int pos, int maxHp, int atk, int atkRange, BulletSupplier bullet, String imgName){
@@ -33,16 +36,46 @@ public class Creature {
             case ATTACK:
                 attack(inst.target, items);
                 break;
-            case CAST:
-                break;
             default:
                 break;
         }
     }
 
-    protected boolean hurt(int damage){
+    public boolean hurt(int damage){
         hp -= damage;
         return hp <= 0;
+    }
+
+    public int getId(){
+        return id;
+    }
+
+    public int getPos(){
+        return pos;
+    }
+
+    public Camp getCamp(){
+        return camp;
+    }
+
+    public int getHp(){
+        return hp;
+    }
+
+    public int getMaxHp(){
+        return maxHp;
+    }
+
+    public String getImgName(){
+        return imgName;
+    }
+
+    public void setInst(Instruction inst){
+        this.inst = inst;
+    }
+
+    public void addBuff(Buff buff){
+        //TODO
     }
 
     protected void moveTo(int dest, ItemManager items, int pathType){
@@ -129,39 +162,7 @@ public class Creature {
                 return;
             }
     }
-
-    protected void addBuff(Buff buff){
-        //TODO
-    }
-
-    int getId(){
-        return id;
-    }
-
-    int getPos(){
-        return pos;
-    }
-
-    Camp getCamp(){
-        return camp;
-    }
-
-    int getHp(){
-        return hp;
-    }
-
-    int getMaxHp(){
-        return maxHp;
-    }
-
-    String getImgName(){
-        return imgName;
-    }
-
-    void setInst(Instruction inst){
-        this.inst = inst;
-    }
-
+    
     private static int identifier = 0;
 
     protected int id;

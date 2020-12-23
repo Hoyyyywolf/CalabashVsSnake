@@ -1,4 +1,4 @@
-package nju.zjl.cvs;
+package nju.zjl.cvs.game;
 
 public class Operation {
     public Operation(int executor, Instruction inst){

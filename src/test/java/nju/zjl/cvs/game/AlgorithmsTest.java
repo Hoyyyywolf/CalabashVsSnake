@@ -1,11 +1,11 @@
-package nju.zjl.cvs;
+package nju.zjl.cvs.game;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
-import org.junit.*;
+import org.junit.Test;
 
 public class AlgorithmsTest {
     @Test
