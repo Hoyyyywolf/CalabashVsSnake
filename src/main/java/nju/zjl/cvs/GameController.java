@@ -15,7 +15,7 @@ public class GameController implements Runnable {
 
     @Override
     public void run() {
-        while(!gameOver()){
+        while(!isGameOver() && !gameOver){
             times++;
             update();
             try{
@@ -46,12 +46,17 @@ public class GameController implements Runnable {
         }
     }
 
-    boolean gameOver(){
+    boolean isGameOver(){
         Creature[] creatures = items.getCreatures();
         Camp camp = creatures[0].getCamp();
         return Stream.of(creatures).allMatch(c -> c.getCamp() == camp); 
     }
 
+    void terminate(){
+        gameOver = true;
+    }
+
+    protected boolean gameOver = false;
     protected int logicTimer = Constants.FPS / 10;
     protected int logicFrame = 0;
     protected int times = 0;

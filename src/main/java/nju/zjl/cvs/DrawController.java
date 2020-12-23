@@ -17,7 +17,6 @@ import javafx.scene.paint.Color;
 
 public class DrawController implements Runnable{
     public DrawController(ItemManager items, Canvas canvas){
-        this.gameOver = false;
         this.items = items;
         this.canvas = canvas;
         try{
@@ -69,11 +68,11 @@ public class DrawController implements Runnable{
         }
     }
 
-    public void gameOver(){
+    public void terminate(){
         gameOver = true;
     }
 
-    protected boolean gameOver;
+    protected boolean gameOver = false;
     protected ItemManager items;
     protected Canvas canvas;
     protected Map<String, Image> creatureImageMap = new HashMap<>();
