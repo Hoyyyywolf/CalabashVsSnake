@@ -48,6 +48,7 @@ public class DrawController implements Runnable{
                 gc.setStroke(Color.BLACK);
                 IntStream.range(0, Constants.ROWS + 1).forEach(i -> gc.strokeLine(0, i * Constants.GRIDHEIGHT, canvas.getWidth(), i * Constants.GRIDHEIGHT));
                 IntStream.range(0, Constants.COLUMNS + 1).forEach(i -> gc.strokeLine(i * Constants.GRIDWIDTH, 0, i * Constants.GRIDWIDTH, canvas.getHeight()));
+                
                 Stream.of(items.getCreatures()).forEach(c -> drawCreature(c, gc));
                 Stream.of(items.getAffectors()).forEach(a -> drawAffector(a, gc));
             });

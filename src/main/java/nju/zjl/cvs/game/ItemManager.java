@@ -2,10 +2,10 @@ package nju.zjl.cvs.game;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.IntStream;
 
 public class ItemManager {
@@ -71,8 +71,8 @@ public class ItemManager {
         addCreature(CreatureFactory.generateSnake(3, 8));
     }
 
-    protected Map<Integer, Creature> ctPosMap = new HashMap<>();
-    protected Map<Integer, Creature> ctIdMap = new HashMap<>();
+    protected Map<Integer, Creature> ctPosMap = new ConcurrentHashMap<>();
+    protected Map<Integer, Creature> ctIdMap = new ConcurrentHashMap<>();
 
-    protected Queue<Affector> atQueue = new LinkedList<>();
+    protected Queue<Affector> atQueue = new ConcurrentLinkedQueue<>();
 }

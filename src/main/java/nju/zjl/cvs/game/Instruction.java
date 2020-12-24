@@ -1,6 +1,8 @@
 package nju.zjl.cvs.game;
 
-public class Instruction {
+import java.io.Serializable;
+
+public class Instruction implements Serializable{
     public final Action action;
     public final int pos;
     public final int target;
@@ -27,5 +29,10 @@ public class Instruction {
         this.target = target;
     }
 
+    protected Instruction(){
+        this.action = Action.NULL;
+        this.pos = -1;
+        this.target = -1;
+    }
 
 }
