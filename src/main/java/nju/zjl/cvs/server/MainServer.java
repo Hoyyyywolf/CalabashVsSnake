@@ -20,44 +20,31 @@ public class MainServer {
             exception.printStackTrace();
             return;
         }
-        Socket client1 = null;
-        Socket client2 = null;
         ExecutorService exec = Executors.newCachedThreadPool();
         while(true){
-            try{
-                client1 = server.accept();
-                client2 = server.accept();
+            try(
+                Socket client1 = server.accept();
+                Socket client2 = server.accept();
                 DataInputStream in1 = new DataInputStream(client1.getInputStream());
                 DataInputStream in2 = new DataInputStream(client2.getInputStream());
+                DataOutputStream out1 = new DataOutputStream(client1.getOutputStream());
+                DataOutputStream out2 = new DataOutputStream(client2.getOutputStream());
+            ){
                 int udp1 = in1.readInt();
                 int udp2 = in2.readInt();
 
                 DatagramSocket datagramSocket = new DatagramSocket();
-                DataOutputStream out1 = new DataOutputStream(client1.getOutputStream());
-                DataOutputStream out2 = new DataOutputStream(client2.getOutputStream());
+                
                 int i = new Random().nextInt(2);
                 out1.writeInt(datagramSocket.getLocalPort());
                 out2.writeInt(datagramSocket.getLocalPort());
                 out1.writeInt(i);
                 out2.writeInt(~i);
+
                 exec.execute(new GameServer(client1.getInetAddress(), udp1, client2.getInetAddress(), udp2, datagramSocket));
             }catch(IOException exception){
                 System.err.println("an error occured when create connection");
                 exception.printStackTrace();
-            }finally{
-                try{
-                    if(client1 != null){
-                        client1.close();
-                        client1 = null;
-                    }
-                    if(client2 != null){
-                        client2.close();
-                        client2 = null;
-                    }
-                }catch(IOException exception){
-                    System.err.println("an error occured when close connection");
-                    exception.printStackTrace();
-                }
             }
         }
     }
