@@ -3,10 +3,6 @@ package nju.zjl.cvs.game;
 import java.io.Serializable;
 
 public class Instruction implements Serializable{
-    public final Action action;
-    public final int pos;
-    public final int target;
-
     enum Action{
         NULL, MOVE, CAST, ATTACK    
     }
@@ -34,5 +30,10 @@ public class Instruction implements Serializable{
         this.pos = -1;
         this.target = -1;
     }
+    
+    public final Action action;
+    public final int pos;
+    public final int target;
 
+    private static final long serialVersionUID = -5948987941441837263L;
 }
