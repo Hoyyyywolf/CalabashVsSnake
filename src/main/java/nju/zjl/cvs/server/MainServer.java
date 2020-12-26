@@ -35,11 +35,11 @@ public class MainServer {
 
                 DatagramSocket datagramSocket = new DatagramSocket();
                 
-                int i = new Random().nextInt(2);
+                boolean c = new Random().nextBoolean();
                 out1.writeInt(datagramSocket.getLocalPort());
                 out2.writeInt(datagramSocket.getLocalPort());
-                out1.writeInt(i);
-                out2.writeInt(~i);
+                out1.writeBoolean(c);
+                out2.writeBoolean(!c);
 
                 exec.execute(new GameServer(client1.getInetAddress(), udp1, client2.getInetAddress(), udp2, datagramSocket));
             }catch(IOException exception){

@@ -16,13 +16,13 @@ public class GameController implements Runnable {
     @Override
     public void run() {
         while(!isGameOver() && !gameOver){
-            times++;
-            update();
             try{
                 TimeUnit.MILLISECONDS.sleep(1000 / Constants.FPS);
             }catch(InterruptedException exception){
                 exception.printStackTrace();
             }
+            times++;
+            update();
         }
         gameEnd.accept(items.getCreatures()[0].getCamp());
     }
@@ -34,6 +34,7 @@ public class GameController implements Runnable {
     protected void update(){
         while(times > 0){
             if(logicTimer <= 0){
+                System.out.println("update logicFrame: " + System.currentTimeMillis());
                 Operation[] ops = operator.getLogicFrames(logicFrame);
                 if(ops == null){
                     return;
@@ -41,6 +42,7 @@ public class GameController implements Runnable {
                 for(Operation op : ops){
                     items.getCreatureById(op.executor).setInst(op.inst);
                 }
+                logicFrame++;
                 logicTimer = Constants.FPS / 10;
             }
             Stream.of(items.getCreatures()).forEach(c -> c.update(items));

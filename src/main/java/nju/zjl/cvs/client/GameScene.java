@@ -1,9 +1,8 @@
 package nju.zjl.cvs.client;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -20,7 +19,6 @@ import nju.zjl.cvs.game.GameController;
 import nju.zjl.cvs.game.Instruction;
 import nju.zjl.cvs.game.ItemManager;
 import nju.zjl.cvs.game.Operation;
-import nju.zjl.cvs.game.Operator;
 
 public class GameScene {
     public GameScene(Runnable backToMenu){
@@ -32,39 +30,33 @@ public class GameScene {
         stackPane.getChildren().addAll(gameCanvas, uiCanvas);
         grid = new GridPane();
         root.getChildren().addAll(stackPane, grid);
-        gameScene = new Scene(root);
+        scene = new Scene(root);
         
         initEventHandler();
     }
     
     public void newGame(Stage currentStage){
         select = -1;
-        camp = Camp.CALABASH;
         items = new ItemManager();
         items.initDefaultCreatures();
-        operator = new Operator(){
-            private Queue<Operation> queue = new ConcurrentLinkedQueue<>();
-            @Override
-            public void addOperation(Operation op){
-                queue.add(op);
-            }
-
-            @Override
-            public Operation[] getLogicFrames(int logicFrame){
-                Operation[] ret = queue.toArray(new Operation[0]);
-                queue.clear();
-                return ret;
-            }
-        };
+        operator = new GameOperator();
         game = new GameController(items, operator, this::gameOver);
         drawer = new DrawController(items, gameCanvas);
         currentStage.setOnCloseRequest(e -> {
             game.terminate();
             drawer.terminate();
+            operator.terminate();
             Platform.exit();
         });
-        currentStage.setScene(gameScene);
+        currentStage.setScene(scene);
+        camp = operator.connect("127.0.0.1", 2345);
         ExecutorService exec = Executors.newCachedThreadPool();
+        exec.execute(operator);
+        try{
+            TimeUnit.MILLISECONDS.sleep(100);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         exec.execute(game);
         exec.execute(drawer);
         exec.shutdown();
@@ -111,11 +103,12 @@ public class GameScene {
 
     protected void gameOver(Camp winner){
         drawer.terminate();
+        operator.terminate();
         Platform.exit();
     }
 
     protected Runnable backToMenu;
-    protected Scene gameScene;
+    protected Scene scene;
     protected GridPane grid;
     protected Canvas gameCanvas;
     protected Canvas uiCanvas;
@@ -123,7 +116,7 @@ public class GameScene {
     protected int select;
     protected Camp camp;
     protected ItemManager items;
-    protected Operator operator;
+    protected GameOperator operator;
     protected GameController game;
     protected DrawController drawer;
 }
