@@ -34,19 +34,16 @@ public class MainServer {
             DataOutputStream out1 = new DataOutputStream(client1.getOutputStream());
             int udp1 = in1.readInt();
             out1.writeInt(datagramSocket.getLocalPort());
-            System.out.println("client1");
 
             client2 = server.accept();
             DataInputStream in2 = new DataInputStream(client2.getInputStream());
             DataOutputStream out2 = new DataOutputStream(client2.getOutputStream());
             int udp2 = in2.readInt();
             out2.writeInt(datagramSocket.getLocalPort());
-            System.out.println("client2");
 
             boolean c = new Random().nextBoolean();
             out1.writeBoolean(c);
             out2.writeBoolean(!c);
-            System.out.println("begin");
 
             exec.execute(new GameServer(client1.getInetAddress(), udp1, client2.getInetAddress(), udp2, datagramSocket));
 
