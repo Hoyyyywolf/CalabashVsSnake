@@ -1,12 +1,9 @@
 package nju.zjl.cvs.client;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javafx.application.Platform;
@@ -24,15 +21,10 @@ public class DrawController implements Runnable{
     public DrawController(ItemManager items, Canvas canvas){
         this.items = items;
         this.canvas = canvas;
-        try{
-            Path root = Paths.get(DrawController.class.getClassLoader().getResource("").toURI());
-            root = root.resolve("image");
-            for(File f : root.toFile().listFiles()){
-                String name = f.getName();
-                creatureImageMap.put(name.substring(0, name.lastIndexOf(".")), new Image(f.toURI().toURL().toString(), Constants.GRIDWIDTH - 20, Constants.GRIDHEIGHT - 30, true, true));
-            }
-        }catch(Exception exception){
-            exception.printStackTrace();
+        String[] images = {"red", "green", "blue", "yellow", "orange", "purple", "cyan", "grandpa", "snake", "scorpion"};
+        for(String img : images){
+            InputStream in = DrawController.class.getClassLoader().getResourceAsStream("image/" + img +".png");
+            creatureImageMap.put(img, new Image(in, Constants.GRIDWIDTH - 20, Constants.GRIDHEIGHT - 30, true, true));
         }
         colorMap.put("black", Color.BLACK);
     }
@@ -43,12 +35,6 @@ public class DrawController implements Runnable{
             Platform.runLater(() -> {
                 GraphicsContext gc = canvas.getGraphicsContext2D();
                 gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                gc.setFill(Color.LIGHTGRAY);
-                gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                gc.setStroke(Color.BLACK);
-                IntStream.range(0, Constants.ROWS + 1).forEach(i -> gc.strokeLine(0, i * Constants.GRIDHEIGHT, canvas.getWidth(), i * Constants.GRIDHEIGHT));
-                IntStream.range(0, Constants.COLUMNS + 1).forEach(i -> gc.strokeLine(i * Constants.GRIDWIDTH, 0, i * Constants.GRIDWIDTH, canvas.getHeight()));
-                
                 Stream.of(items.getCreatures()).forEach(c -> drawCreature(c, gc));
                 Stream.of(items.getAffectors()).forEach(a -> drawAffector(a, gc));
             });

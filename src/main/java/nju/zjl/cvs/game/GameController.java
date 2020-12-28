@@ -34,7 +34,6 @@ public class GameController implements Runnable {
     protected void update(){
         while(times > 0){
             if(logicTimer <= 0){
-                System.out.println("update logicFrame: " + System.currentTimeMillis());
                 Operation[] ops = operator.getLogicFrames(logicFrame);
                 if(ops == null){
                     return;

@@ -13,6 +13,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 import nju.zjl.cvs.game.Constants.Camp;
 import nju.zjl.cvs.game.Operation;
@@ -58,7 +59,6 @@ public class GameOperator implements Operator, Runnable{
         DatagramPacket datagramPacket = new DatagramPacket(buf, buf.length);
         while(!gameOver)try{
             datagramSocket.receive(datagramPacket);
-            System.out.println("receieve logicFrame: " + System.currentTimeMillis());
             ObjectInputStream objin = new ObjectInputStream(new ByteArrayInputStream(datagramPacket.getData()));
             AppPacket pkt = (AppPacket)objin.readObject();
             if(pkt.logicFrame >= expected){
@@ -92,7 +92,7 @@ public class GameOperator implements Operator, Runnable{
         datagramSocket.close();
     }
 
-    public Camp connect(String hostIp, int port){
+    public void connect(String hostIp, int port, Consumer<Boolean> establish, Consumer<Camp> begin){
         byte[] ipBytes = new byte[4];
         String [] s = hostIp.split("\\.");
         for(int i = 0; i < 4; i++){
@@ -103,8 +103,9 @@ public class GameOperator implements Operator, Runnable{
         }catch(UnknownHostException exception){
             System.err.println("hostIp is illegal: " + hostIp);
             exception.printStackTrace();
-            return null;
+            establish.accept(false);
         }
+
         try(
             Socket client = new Socket(ip, port);
             DataInputStream in = new DataInputStream(client.getInputStream());
@@ -113,12 +114,14 @@ public class GameOperator implements Operator, Runnable{
             datagramSocket = new DatagramSocket();
             out.writeInt(datagramSocket.getLocalPort());
             udp = in.readInt();
+            establish.accept(true);
+
             boolean c = in.readBoolean();
-            return c ? Camp.CALABASH : Camp.SNAKE;
+            begin.accept(c ? Camp.CALABASH : Camp.SNAKE);
         }catch(IOException exception){
             System.err.println("an error occurred when establish connection or game");
             exception.printStackTrace();
-            return null;
+            establish.accept(false);
         }        
     }
 

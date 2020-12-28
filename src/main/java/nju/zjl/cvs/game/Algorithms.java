@@ -12,7 +12,7 @@ public class Algorithms {
         PriorityQueue<Node> openList = new PriorityQueue<>();  
         int len = map.length;
         boolean[] visited = new boolean[len];
-        IntUnaryOperator countingH = x -> Math.abs(x - dest) / columns + Math.abs(x - dest) % columns;
+        IntUnaryOperator countingH = x -> Math.abs(x / columns - dest / columns) + Math.abs(x % columns - dest % columns);
 
         openList.add(new Node(src, 0, countingH.applyAsInt(src), new Node()));
         while(!openList.isEmpty()){
@@ -33,7 +33,7 @@ public class Algorithms {
         PriorityQueue<Node> openList = new PriorityQueue<>();  
         int len = map.length;
         boolean[] visited = new boolean[len];
-        IntUnaryOperator countingH = x -> Math.abs(x - dest) / columns + Math.abs(x - dest) % columns;
+        IntUnaryOperator countingH = x -> Math.abs(x / columns - dest / columns) + Math.abs(x % columns - dest % columns);
 
         openList.add(new Node(src, 0, countingH.applyAsInt(src), new Node()));
         while(!openList.isEmpty()){
@@ -42,7 +42,7 @@ public class Algorithms {
                 continue;
             }
             visited[n.p] = true;
-            int dis = Math.max(Math.abs(dest - n.p) / Constants.COLUMNS, Math.abs(dest - n.p) % Constants.COLUMNS);
+            int dis = Math.max(Math.abs(dest / columns - n.p / columns), Math.abs(dest % columns - n.p % columns));
             if(dis <= atkRange){
                 return resolvePath(n);
             }

@@ -2,15 +2,16 @@ package nju.zjl.cvs.client;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import nju.zjl.cvs.game.Constants;
 import nju.zjl.cvs.game.Constants.Camp;
@@ -23,15 +24,24 @@ import nju.zjl.cvs.game.Operation;
 public class GameScene {
     public GameScene(Runnable backToMenu){
         this.backToMenu = backToMenu;
-        HBox root = new HBox();
+
         StackPane stackPane = new StackPane();
+        bgCanvas = new Canvas(Constants.COLUMNS * Constants.GRIDWIDTH, Constants.ROWS * Constants.GRIDHEIGHT);
         gameCanvas = new Canvas(Constants.COLUMNS * Constants.GRIDWIDTH, Constants.ROWS * Constants.GRIDHEIGHT);
         uiCanvas = new Canvas(Constants.COLUMNS * Constants.GRIDWIDTH, Constants.ROWS * Constants.GRIDHEIGHT);
-        stackPane.getChildren().addAll(gameCanvas, uiCanvas);
-        grid = new GridPane();
-        root.getChildren().addAll(stackPane, grid);
+        stackPane.getChildren().addAll(bgCanvas, gameCanvas, uiCanvas);
+
+        info = new TextArea();
+        info.setEditable(false);
+        info.setPrefWidth(150);
+        info.setWrapText(true);
+
+        HBox root = new HBox();
+        root.getChildren().addAll(stackPane, info);
+        root.setSpacing(20);
         scene = new Scene(root);
-        
+
+        initBackground();
         initEventHandler();
     }
     
@@ -42,6 +52,7 @@ public class GameScene {
         operator = new GameOperator();
         game = new GameController(items, operator, this::gameOver);
         drawer = new DrawController(items, gameCanvas);
+
         currentStage.setOnCloseRequest(e -> {
             game.terminate();
             drawer.terminate();
@@ -49,17 +60,34 @@ public class GameScene {
             Platform.exit();
         });
         currentStage.setScene(scene);
-        camp = operator.connect("127.0.0.1", 2345);
-        ExecutorService exec = Executors.newCachedThreadPool();
-        exec.execute(operator);
-        try{
-            TimeUnit.MILLISECONDS.sleep(100);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        exec.execute(game);
-        exec.execute(drawer);
-        exec.shutdown();
+
+        info.appendText(String.format("Connecting to server.%n"));
+        new Thread(() -> {
+            operator.connect("127.0.0.1", 23456, this::connectSuccess, this::connectOver);
+        }).start();
+    }
+
+    protected void connectSuccess(Boolean success){
+        Platform.runLater(() -> {
+            if(Boolean.TRUE.equals(success)){
+                info.appendText(String.format("Connection established, matching player.%n"));
+            }
+            else{
+                info.appendText(String.format("Cannot establish connection.%n"));
+            }
+        });
+    }
+
+    protected void connectOver(Camp c){
+        Platform.runLater(() -> {
+            info.appendText(String.format("Match successfully, your camp is %s.%n", c.name()));
+            camp = c;
+            ExecutorService exec = Executors.newCachedThreadPool();
+            exec.execute(operator);
+            exec.execute(game);
+            exec.execute(drawer);
+            exec.shutdown();
+        });
     }
 
     protected void initEventHandler(){
@@ -73,6 +101,18 @@ public class GameScene {
                 e.consume();
             }
         });
+    }
+
+    protected void initBackground(){
+        GraphicsContext gc = bgCanvas.getGraphicsContext2D();
+        gc.setFill(Color.LIGHTGRAY);
+        for(int i = 0; i < Constants.ROWS; i++){
+            for(int j = 0; j < Constants.COLUMNS; j++){
+                if(i % 2 != j % 2){
+                    gc.fillRect(j * Constants.GRIDWIDTH, i * Constants.GRIDHEIGHT, Constants.GRIDWIDTH, Constants.GRIDHEIGHT);
+                }
+            }
+        }
     }
 
     protected void leftMouseClickEvent(int pos){
@@ -89,9 +129,14 @@ public class GameScene {
             return;
         }
         Creature s = items.getCreatureById(select);
+        if(s == null){
+            select = -1;
+            return;
+        }
         if(s.getCamp() != camp){
             return;
         }
+
         Creature t = items.getCreatureByPos(pos);
         if(t == null){
             operator.addOperation(new Operation(select, Instruction.newMoveInst(pos)));
@@ -109,9 +154,10 @@ public class GameScene {
 
     protected Runnable backToMenu;
     protected Scene scene;
-    protected GridPane grid;
+    protected Canvas bgCanvas;
     protected Canvas gameCanvas;
     protected Canvas uiCanvas;
+    protected TextArea info;
 
     protected int select;
     protected Camp camp;

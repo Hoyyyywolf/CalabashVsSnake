@@ -94,9 +94,11 @@ public class Creature {
         items.moveCreature(pos, next);
         pos = next;
         moveCD = Constants.CREATUREMOVECD;
-        if(movePath.isEmpty() && inst.action == Instruction.Action.MOVE){ //reach the dest, remove the instruction
-            inst = Instruction.newNullInst();
+        if(movePath.isEmpty()){ //reach the dest, remove the instruction
             movePath = null;
+            if(inst.action == Instruction.Action.MOVE){
+                inst = Instruction.newNullInst();
+            }
         }
     }
 
@@ -128,7 +130,7 @@ public class Creature {
             return;
         }
         int tPos = ct.getPos();
-        int dis = Math.max(Math.abs(pos - tPos) / Constants.COLUMNS, Math.abs(pos - tPos) % Constants.COLUMNS);
+        int dis = Math.max(Math.abs(pos / Constants.COLUMNS - tPos / Constants.COLUMNS), Math.abs(pos % Constants.COLUMNS - tPos % Constants.COLUMNS));
         if(dis > atkRange){ //out of attack range, first try to move towards it
             moveTo(tPos, items, 1);
             return;
