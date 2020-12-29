@@ -104,6 +104,9 @@ public class GUI extends Application{
             exec.execute(game);
             exec.shutdown();
         }
+        else{
+            info.appendText(String.format("Failed to load record file, please check its legitimacy.%n"));
+        }
 
     }
 
@@ -129,7 +132,7 @@ public class GUI extends Application{
                 info.appendText(String.format("Connection established, matching player.%n"));
             }
             else{
-                info.appendText(String.format("Cannot establish connection.%n"));
+                info.appendText(String.format("Failed to connect to server.%n"));
                 status = "";
             }
         });

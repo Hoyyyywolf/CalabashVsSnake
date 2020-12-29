@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Instruction implements Serializable{
     enum Action{
-        NULL, MOVE, CAST, ATTACK    
+        NULL, MOVE, ATTACK    
     }
     
     public static Instruction newNullInst(){
