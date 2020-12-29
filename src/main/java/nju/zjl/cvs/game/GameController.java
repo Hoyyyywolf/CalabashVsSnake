@@ -24,6 +24,11 @@ public class GameController implements Runnable {
             times++;
             update();
         }
+        try{
+            TimeUnit.MILLISECONDS.sleep(1000 / Constants.FPS);
+        }catch(InterruptedException exception){
+            exception.printStackTrace();
+        }
         gameEnd.accept(items.getCreatures()[0].getCamp());
     }
 

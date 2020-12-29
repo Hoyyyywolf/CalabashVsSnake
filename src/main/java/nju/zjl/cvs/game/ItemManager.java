@@ -59,6 +59,7 @@ public class ItemManager {
     }
 
     public void initDefaultCreatures(){
+        Creature.resetIdentifier();
         addCreature(CreatureFactory.generateCalabash(3, 4, "red"));
         addCreature(CreatureFactory.generateCalabash(2, 2, "orange"));
         addCreature(CreatureFactory.generateCalabash(2, 3, "yellow"));

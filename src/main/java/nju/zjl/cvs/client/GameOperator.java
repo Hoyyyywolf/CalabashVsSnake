@@ -1,9 +1,12 @@
 package nju.zjl.cvs.client;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -12,7 +15,9 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.concurrent.ConcurrentHashMap;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.function.Consumer;
 
 import nju.zjl.cvs.game.Constants.Camp;
@@ -23,10 +28,6 @@ import nju.zjl.cvs.server.AppPacket;
 
 
 public class GameOperator implements Operator, Runnable{
-    public GameOperator(){
-        gameOver = false;
-    }
-
     @Override
     public void addOperation(Operation op){
         try{
@@ -48,9 +49,14 @@ public class GameOperator implements Operator, Runnable{
 
     @Override
     public Operation[] getLogicFrames(int logicFrame){
-        Operation[] ret = operationMap.get(logicFrame);
-        operationMap.remove(logicFrame);
-        return ret;
+        synchronized(lock){
+            if(logicFrame >= expected){
+                return null;
+            }
+            else{
+                return operationList.get(logicFrame);
+            }
+        }
     }
 
     @Override
@@ -61,35 +67,27 @@ public class GameOperator implements Operator, Runnable{
             datagramSocket.receive(datagramPacket);
             ObjectInputStream objin = new ObjectInputStream(new ByteArrayInputStream(datagramPacket.getData()));
             AppPacket pkt = (AppPacket)objin.readObject();
-            if(pkt.logicFrame >= expected){
-                operationMap.put(pkt.logicFrame, pkt.payload3);
+            synchronized(lock){
+                if(expected + 3 >= operationList.size()){
+                    operationList.ensureCapacity(operationList.size() + 180);
+                }
+                if(pkt.logicFrame >= expected){
+                    operationList.add(pkt.logicFrame, pkt.payload3);
+                }
+                if(pkt.logicFrame - 1 >= expected){
+                    operationList.add(pkt.logicFrame - 1, pkt.payload2);
+                }
+                if(pkt.logicFrame - 2 >= expected){
+                    operationList.add(pkt.logicFrame - 2, pkt.payload1);
+                }
+                expected = pkt.logicFrame + 1;
             }
-            if(pkt.logicFrame - 1 >= expected){
-                operationMap.put(pkt.logicFrame - 1, pkt.payload2);
-            }
-            if(pkt.logicFrame - 2 >= expected){
-                operationMap.put(pkt.logicFrame - 2, pkt.payload1);
-            }
-            expected = pkt.logicFrame + 1;
         }catch(IOException | ClassNotFoundException exception){
             System.err.println("an error occurred when receive or read packet");
             exception.printStackTrace();
         }
 
-        try{
-            ByteArrayOutputStream bout = new ByteArrayOutputStream();
-            ObjectOutputStream objout = new ObjectOutputStream(bout);
-            AppPacket pkt = new AppPacket(2, -1, new Operation[0], new Operation[0], new Operation[0]);
-            objout.writeObject(pkt);
-            objout.flush();
-            byte[] message = bout.toByteArray();
-            DatagramPacket dp = new DatagramPacket(message, message.length, ip, udp);
-            datagramSocket.send(dp);
-        }catch(IOException exception){
-            System.err.println("an error occurred when send packet");
-            exception.printStackTrace();
-        }
-        datagramSocket.close();
+        exitConnection();
     }
 
     public void connect(String hostIp, int port, Consumer<Boolean> establish, Consumer<Camp> begin){
@@ -98,6 +96,7 @@ public class GameOperator implements Operator, Runnable{
         for(int i = 0; i < 4; i++){
             ipBytes[i] = (byte)Integer.parseInt(s[i]);
         }
+
         try{
             ip = InetAddress.getByAddress(ipBytes);
         }catch(UnknownHostException exception){
@@ -129,11 +128,57 @@ public class GameOperator implements Operator, Runnable{
         gameOver = true;
     }
 
+    public String saveRecord(){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+        Date time = new Date();
+        String fileName = formatter.format(time) + ".record";
+        File file = new File(fileName);
+        try{
+            file.createNewFile();
+        }catch(IOException exception){
+            exception.printStackTrace();
+            return null;
+        }
+
+        try(
+            FileOutputStream fout = new FileOutputStream(file);
+            ObjectOutputStream objout = new ObjectOutputStream(new BufferedOutputStream(fout));
+        ){
+            objout.writeInt(operationList.size());
+            for(Operation[] ops : operationList){
+                objout.writeObject(ops);
+            }
+        }catch(IOException exception){
+            exception.printStackTrace();
+            return null;
+        }
+        return fileName;
+    }
+
+    protected void exitConnection(){
+        try{
+            ByteArrayOutputStream bout = new ByteArrayOutputStream();
+            ObjectOutputStream objout = new ObjectOutputStream(bout);
+            AppPacket pkt = new AppPacket(2, -1, new Operation[0], new Operation[0], new Operation[0]);
+            objout.writeObject(pkt);
+            objout.flush();
+            byte[] message = bout.toByteArray();
+            DatagramPacket dp = new DatagramPacket(message, message.length, ip, udp);
+            datagramSocket.send(dp);
+        }catch(IOException exception){
+            System.err.println("an error occurred when send packet");
+            exception.printStackTrace();
+        }
+        datagramSocket.close();
+    }
+
     protected DatagramSocket datagramSocket;
     protected InetAddress ip;
     protected int udp;
 
-    protected boolean gameOver;
+
+    private final Object lock = new Object();
+    protected boolean gameOver = false;
     protected int expected = 0;
-    protected ConcurrentHashMap<Integer, Operation[]> operationMap = new ConcurrentHashMap<>();
+    protected ArrayList<Operation[]> operationList = new ArrayList<>(180);
 }

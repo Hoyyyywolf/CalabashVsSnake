@@ -8,8 +8,8 @@ import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Vector;
 
 import nju.zjl.cvs.game.Operation;
 
@@ -39,7 +39,7 @@ public class GameServer implements Runnable {
             AppPacket pkt = (AppPacket)objin.readObject();
             switch(pkt.type){
                 case 1:
-                    synchronized(last){
+                    synchronized(lock){
                         operationList.get(last).add(pkt.payload1[0]);
                     }
                     break;
@@ -63,9 +63,10 @@ public class GameServer implements Runnable {
     private int p2Udp;
     private DatagramSocket datagramSocket;
 
-    private Integer last = 2;
-    private Integer logicFrame = 0;
-    private Vector<LinkedList<Operation>> operationList = new Vector<>(3);
+    private final Object lock = new Object();
+    private int last = 2;
+    private int logicFrame = 0;
+    private ArrayList<LinkedList<Operation>> operationList = new ArrayList<>(3);
     private int exit = 0;
 
     class Sender implements Runnable {
@@ -80,7 +81,7 @@ public class GameServer implements Runnable {
                 ByteArrayOutputStream bout = new ByteArrayOutputStream();
                 ObjectOutputStream objout = new ObjectOutputStream(bout);
                 AppPacket pkt;
-                synchronized(last){
+                synchronized(lock){
                     pkt = new AppPacket(0, logicFrame, operationList.get((last + 1) % 3).toArray(new Operation[0]), operationList.get((last + 2) % 3).toArray(new Operation[0]), operationList.get(last).toArray(new Operation[0]));
                     last = (last + 1) % 3;
                     operationList.get(last).clear();

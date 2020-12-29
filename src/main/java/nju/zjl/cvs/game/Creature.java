@@ -165,6 +165,10 @@ public class Creature {
             }
     }
     
+    public static void resetIdentifier(){
+        identifier = 0;
+    }
+
     private static int identifier = 0;
 
     protected int id;
