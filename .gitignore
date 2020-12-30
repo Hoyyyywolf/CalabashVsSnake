@@ -19,3 +19,6 @@ buildNumber.properties
 .project
 .settings/
 .metadata/
+
+#game record
+*.record

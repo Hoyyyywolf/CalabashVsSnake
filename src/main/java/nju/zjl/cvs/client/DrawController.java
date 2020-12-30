@@ -21,10 +21,10 @@ public class DrawController implements Runnable{
     public DrawController(ItemManager items, Canvas canvas){
         this.items = items;
         this.canvas = canvas;
-        String[] images = {"red", "green", "blue", "yellow", "orange", "purple", "cyan", "grandpa", "snake", "scorpion"};
+        String[] images = {"red", "green", "blue", "yellow", "orange", "purple", "cyan", "snake", "scorpion"};
         for(String img : images){
             InputStream in = DrawController.class.getClassLoader().getResourceAsStream("image/" + img +".png");
-            creatureImageMap.put(img, new Image(in, Constants.GRIDWIDTH - 20, Constants.GRIDHEIGHT - 30, true, true));
+            creatureImageMap.put(img, new Image(in, 50, 50, true, false));
         }
         colorMap.put("black", Color.BLACK);
     }
