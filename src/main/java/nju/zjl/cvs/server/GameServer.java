@@ -22,6 +22,9 @@ public class GameServer implements Runnable {
         this.p2Ip = p2Ip;
         this.p2Udp = p2Udp;
         this.datagramSocket = datagramSocket;
+        if(datagramSocket.isClosed()){
+            System.err.println("socket closed");
+        }
         operationList.add(new LinkedList<>());
         operationList.add(new LinkedList<>());
         operationList.add(new LinkedList<>());
@@ -35,6 +38,7 @@ public class GameServer implements Runnable {
         DatagramPacket datagramPacket = new DatagramPacket(buf, buf.length);
         while(exit < 2)try{
             datagramSocket.receive(datagramPacket);
+            System.out.println("receieve packet");
             ObjectInputStream objin = new ObjectInputStream(new ByteArrayInputStream(datagramPacket.getData()));
             AppPacket pkt = (AppPacket)objin.readObject();
             switch(pkt.type){
@@ -52,6 +56,7 @@ public class GameServer implements Runnable {
         }catch(IOException | ClassNotFoundException exception){
             System.err.println("an error occured when receive or read packet");
             exception.printStackTrace();
+            break;
         }
         sender.stop();
         datagramSocket.close();
@@ -96,9 +101,11 @@ public class GameServer implements Runnable {
                 datagramPacket.setPort(p2Udp);
                 datagramSocket.send(datagramPacket);
                 logicFrame++;
+                System.out.println("send packet");
             }catch(IOException exception){
                 System.err.println("an error occured when send or build packet");
                 exception.printStackTrace();
+                break;
             }
         }
 

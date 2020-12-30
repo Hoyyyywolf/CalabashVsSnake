@@ -3,10 +3,11 @@ package nju.zjl.cvs.game;
 import java.util.LinkedList;
 import java.util.stream.IntStream;
 
+import javafx.scene.canvas.GraphicsContext;
 import nju.zjl.cvs.game.Constants.Camp;
 
 
-public class Creature {
+public class Creature implements Drawable {
     public Creature(Camp camp, int pos, int maxHp, int atk, int atkRange, BulletSupplier bullet, String imgName){
         this.id = identifier++;
         this.camp = camp;
@@ -21,6 +22,17 @@ public class Creature {
         this.movePath = null;
         this.bullet = bullet;
         this.imgName = imgName;
+    }
+
+    @Override
+    public void draw(GraphicsContext gc){
+        int ltx = (pos % Constants.COLUMNS) * Constants.GRIDWIDTH;
+        int lty = (pos / Constants.COLUMNS) * Constants.GRIDHEIGHT;
+        gc.drawImage(Constants.getImage(imgName), ltx + 10, lty + 15);
+        gc.setFill(Constants.getColor("red"));
+        gc.fillRect(ltx + 10, lty + 5, (Constants.GRIDWIDTH - 20) * hp / maxHp, 5);
+        gc.setStroke(Constants.getColor("black"));
+        gc.strokeRect(ltx + 10, lty + 5, Constants.GRIDWIDTH - 20, 5);
     }
 
     public void update(ItemManager items){
@@ -72,10 +84,6 @@ public class Creature {
 
     public void setInst(Instruction inst){
         this.inst = inst;
-    }
-
-    public void addBuff(Buff buff){
-        //TODO
     }
 
     protected void moveTo(int dest, ItemManager items, int pathType){

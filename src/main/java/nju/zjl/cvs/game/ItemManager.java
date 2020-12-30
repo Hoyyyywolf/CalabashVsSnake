@@ -67,7 +67,6 @@ public class ItemManager {
         addCreature(CreatureFactory.generateCalabash(2, 6, "blue"));
         addCreature(CreatureFactory.generateCalabash(1, 2, "cyan"));
         addCreature(CreatureFactory.generateCalabash(1, 3, "purple"));
-        addCreature(CreatureFactory.generateGranpa(1, 4));
         addCreature(CreatureFactory.generateScorpion(3, 6));
         addCreature(CreatureFactory.generateSnake(3, 8));
     }

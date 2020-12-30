@@ -1,5 +1,11 @@
 package nju.zjl.cvs.game;
 
+import java.io.InputStream;
+import java.util.HashMap;
+
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+
 public class Constants {
     public enum Camp {
         CALABASH, SNAKE
@@ -30,5 +36,31 @@ public class Constants {
         ret[0] = pos % COLUMNS * GRIDWIDTH + GRIDWIDTH / 2;
         ret[1] = pos / COLUMNS * GRIDHEIGHT + GRIDHEIGHT / 2;
         return ret;
+    }
+
+    private static HashMap<String, Image> imgMap;
+
+    static{
+        imgMap = new HashMap<>();
+        String[] images = {"red", "green", "blue", "yellow", "orange", "purple", "cyan", "snake", "scorpion", "toad", "centipede", "redBullet", "greenBullet", "blueBullet", "yellowBullet", "orangeBullet", "purpleBullet", "cyanBullet"};
+        for(String img : images){
+            InputStream in = Constants.class.getClassLoader().getResourceAsStream("image/" + img +".png");
+            imgMap.put(img, new Image(in));
+        }
+    }
+
+    public static Image getImage(String imgName){
+        return imgMap.get(imgName);
+    }
+
+    public static Color getColor(String color){
+        switch(color){
+            case "red":
+                return Color.RED;
+            case "black":
+                return Color.BLACK;
+            default:
+                return Color.WHITE;
+        }
     }
 }

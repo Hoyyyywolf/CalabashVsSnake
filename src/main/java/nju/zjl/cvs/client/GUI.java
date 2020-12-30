@@ -77,7 +77,7 @@ public class GUI extends Application{
         info.appendText(String.format("Connecting to server.%n"));
 
         new Thread(() -> {
-            gameOp.connect("127.0.0.1", 23456, this::establishConnection, this::beginGame);
+            gameOp.connect("121.4.28.220", 23456, this::establishConnection, this::beginGame);
         }).start();
     }
 

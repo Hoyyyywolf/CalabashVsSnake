@@ -10,26 +10,22 @@ public class CreatureFactory {
     public static Creature generateCalabash(int x, int y, String name){
         switch(name){
             case "red":
-                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 100, 10, 1, AffectorFactory::generatePlainBullet, "red");
+                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 100, 10, 1, AffectorFactory::generateRedBullet, "red");
             case "orange":
-                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 100, 10, 2, AffectorFactory::generatePlainBullet, "orange");
+                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 100, 10, 2, AffectorFactory::generateOrangeBullet, "orange");
             case "yellow":
-                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 100, 10, 2, AffectorFactory::generatePlainBullet, "yellow");
+                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 100, 10, 2, AffectorFactory::generateYellowBullet, "yellow");
             case "green":
-                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 100, 10, 2, AffectorFactory::generatePlainBullet, "green");
+                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 100, 10, 2, AffectorFactory::generateGreenBullet, "green");
             case "cyan":
-                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 100, 10, 2, AffectorFactory::generatePlainBullet, "cyan");
+                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 100, 10, 2, AffectorFactory::generateCyanBullet, "cyan");
             case "blue":
-                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 100, 10, 2, AffectorFactory::generatePlainBullet, "blue");
+                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 100, 10, 2, AffectorFactory::generateBlueBullet, "blue");
             case "purple":
-                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 100, 10, 2, AffectorFactory::generatePlainBullet, "purple");
+                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 100, 10, 2, AffectorFactory::generatePurpleBullet, "purple");
             default:
                 return null;
         }
-    }
-
-    public static Creature generateGranpa(int x, int y){
-        return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 100, 10, 2, AffectorFactory::generatePlainBullet, "grandpa");
     }
 
     public static Creature generateSnake(int x, int y){

@@ -1,13 +1,17 @@
 package nju.zjl.cvs.game;
 
-public class Bullet implements Affector {
-    public Bullet(int x, int y, int target, int damage, String color,Buff buff){
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.transform.Rotate;
+
+public class Bullet implements Affector, Drawable {
+    public Bullet(int x, int y, int target, int damage, String imgName){
         this.x = x;
         this.y = y;
         this.target = target;
         this.damage = damage;
-        this.buff = buff;
-        this.color = color;
+        this.imgName = imgName;
+        this.angle = 0.;
     }
     
     @Override
@@ -24,11 +28,21 @@ public class Bullet implements Affector {
             if(dead){
                 items.removeCreature(ct.getId());
             }
-            else if(buff != null){
-                ct.addBuff(buff);
-            }
             items.removeAffector(this);
         }
+        computeAngle(dest[0], dest[1]);
+    }
+
+    @Override
+    public void draw(GraphicsContext gc){
+        gc.save();
+
+        Rotate r = new Rotate(angle, x, y);
+        gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
+        Image img = Constants.getImage(imgName);
+        gc.drawImage(img, x - img.getWidth(), y - img.getHeight() / 2);
+
+        gc.restore();
     }
 
     public int getX(){
@@ -37,10 +51,6 @@ public class Bullet implements Affector {
 
     public int getY(){
         return y;
-    }
-
-    public String getColor(){
-        return color;
     }
 
     protected void moveTo(int destX, int destY){
@@ -58,12 +68,19 @@ public class Bullet implements Affector {
         }
     }
     
+    protected void computeAngle(int destX, int destY){
+        int dx = destX - x;
+        double dis = Math.sqrt(dx * dx + (destY - y) * (destY - y));
+        double r = Math.acos(dx / dis) / Math.PI * 180;
+        angle = y > destY ? 360 - r : r;
+    }
+
     protected int x;
     protected int y;
+    protected double angle;
 
     protected int target;
     protected int damage;
 
-    protected String color;
-    protected Buff buff;
+    protected String imgName;
 }

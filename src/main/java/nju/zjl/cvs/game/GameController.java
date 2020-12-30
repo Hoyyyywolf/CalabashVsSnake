@@ -44,7 +44,11 @@ public class GameController implements Runnable {
                     return;
                 }
                 for(Operation op : ops){
-                    items.getCreatureById(op.executor).setInst(op.inst);
+                    Creature c = items.getCreatureById(op.executor);
+                    if(c != null){
+                        c.setInst(op.inst);
+                    }
+
                 }
                 logicFrame++;
                 logicTimer = Constants.FPS / 10;

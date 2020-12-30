@@ -27,15 +27,20 @@ public class MainServer {
         Socket client2 = null;
 
         while(true)try{
-            datagramSocket = new DatagramSocket();
+            int port = 31245;
+            port += new Random().nextInt(2000);
+            datagramSocket = new DatagramSocket(port);
+            System.out.println(String.format("open udp socket: %d", port));
 
             client1 = server.accept();
+            System.out.println("player1 come");
             DataInputStream in1 = new DataInputStream(client1.getInputStream());
             DataOutputStream out1 = new DataOutputStream(client1.getOutputStream());
             int udp1 = in1.readInt();
             out1.writeInt(datagramSocket.getLocalPort());
 
             client2 = server.accept();
+            System.out.println("player2 come");
             DataInputStream in2 = new DataInputStream(client2.getInputStream());
             DataOutputStream out2 = new DataOutputStream(client2.getOutputStream());
             int udp2 = in2.readInt();
@@ -45,6 +50,7 @@ public class MainServer {
             out1.writeBoolean(c);
             out2.writeBoolean(!c);
 
+            System.out.println("game begin");
             exec.execute(new GameServer(client1.getInetAddress(), udp1, client2.getInetAddress(), udp2, datagramSocket));
 
             client1.close();
