@@ -87,6 +87,7 @@ public class GUI extends Application{
         File record = chooser.showOpenDialog(stage);
         if(record == null){
             info.appendText(String.format("No record file selected.%n"));
+            status = "";
             return;
         }
 
@@ -199,10 +200,6 @@ public class GUI extends Application{
                 leftMouseClickEvent(Constants.bulletPos2CreaturePos((int)e.getX(), (int)e.getY()));
                 e.consume();
             }
-            else if(e.getButton() == MouseButton.SECONDARY){
-                rightMouseClickEvent(Constants.bulletPos2CreaturePos((int)e.getX(), (int)e.getY()));
-                e.consume();
-            }
         });
     }
 
@@ -219,34 +216,28 @@ public class GUI extends Application{
     }
 
     protected void leftMouseClickEvent(int pos){
-        Creature c = items.getCreatureByPos(pos);
-        if(c == null){
-            select = -1;
-            return;
+        if(select == -1 || items.getCreatureById(select) == null){
+            Creature c = items.getCreatureByPos(pos);
+            if(c != null && c.getCamp() == camp){
+                select = c.getId();
+            }
+            else{
+                select = -1;
+            }
         }
-        select = c.getId();
-    }
-
-    protected void rightMouseClickEvent(int pos){
-        if(select == -1){
-            return;
+        else{
+            Creature t = items.getCreatureByPos(pos);
+            if(t == null){
+                gameOp.sendOperation(new Operation(select, Instruction.newMoveInst(pos)));
+            }
+            else if(t.getCamp() == camp){
+                select = t.getId();
+            }
+            else if(t.getCamp() != camp){
+                gameOp.sendOperation(new Operation(select, Instruction.newAttackInst(t.getId())));
+            }
         }
-        Creature s = items.getCreatureById(select);
-        if(s == null){
-            select = -1;
-            return;
-        }
-        if(s.getCamp() != camp){
-            return;
-        }
-
-        Creature t = items.getCreatureByPos(pos);
-        if(t == null){
-            gameOp.sendOperation(new Operation(select, Instruction.newMoveInst(pos)));
-        }
-        else if(t.getCamp() != camp){
-            gameOp.sendOperation(new Operation(select, Instruction.newAttackInst(t.getId())));
-        }
+        
     }
 
     protected Stage stage;
