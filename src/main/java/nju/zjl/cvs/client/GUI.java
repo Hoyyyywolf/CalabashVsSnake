@@ -83,6 +83,7 @@ public class GUI extends Application{
 
     protected void loadRecord(){
         FileChooser chooser = new FileChooser();
+        chooser.setInitialDirectory(new File(System.getProperty("user.dir")));
         chooser.setTitle("Seclect Record File");
         File record = chooser.showOpenDialog(stage);
         if(record == null){
