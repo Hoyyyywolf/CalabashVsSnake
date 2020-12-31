@@ -23,8 +23,7 @@ import nju.zjl.cvs.server.AppPacket;
 
 
 public class GameOperator implements Operator, Runnable{
-    @Override
-    public void addOperation(Operation op){
+    public void sendOperation(Operation op){
         try{
             Operation[] temp = new Operation[1];
             temp[0] = op;

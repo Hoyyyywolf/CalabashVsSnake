@@ -12,11 +12,6 @@ import nju.zjl.cvs.game.Operator;
 
 public class RecordOperator implements Operator{
     @Override
-    public void addOperation(Operation op){
-        return;
-    }    
-
-    @Override
     public Operation[] getLogicFrames(int logicFrame){
         return operationList.get(logicFrame);
     }
