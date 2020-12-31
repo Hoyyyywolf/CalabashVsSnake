@@ -92,7 +92,6 @@ public class GUI extends Application{
 
         RecordOperator recordOp = new RecordOperator();
         if(recordOp.readRecord(record)){
-            status = "record";
             info.appendText(String.format("Successfully load record.%n"));
             items = new ItemManager();
             items.initDefaultCreatures();
@@ -106,13 +105,13 @@ public class GUI extends Application{
         }
         else{
             info.appendText(String.format("Failed to load record file, please check its legitimacy.%n"));
+            status = "";
         }
 
     }
 
     protected void gameOver(Camp winner){
         Platform.runLater(() -> {
-            status = "";
             drawer.terminate();
             gameOp.terminate();
             info.appendText(String.format("Game Over, you %s.%n", (winner == camp ? "win" : "lose")));
@@ -123,6 +122,7 @@ public class GUI extends Application{
             else{
                 info.appendText(String.format("Successfully save record to '%s'.%n", ret));
             }
+            status = "";
         });
     }
 
@@ -141,7 +141,6 @@ public class GUI extends Application{
     protected void beginGame(Camp c){
         Platform.runLater(() -> {
             info.appendText(String.format("Match successfully, your camp is %s.%n", c.name()));
-            status = "game";
 
             camp = c;
             ExecutorService exec = Executors.newCachedThreadPool();
@@ -154,9 +153,9 @@ public class GUI extends Application{
 
     protected void recordOver(Camp winner){
         Platform.runLater(() -> {
-            status = "";
             drawer.terminate();
             info.appendText(String.format("Record Over, %s win.%n", winner.toString()));
+            status = "";
         });
     }
 
@@ -180,12 +179,14 @@ public class GUI extends Application{
 
         gameButton.setOnMouseClicked(e -> {
             if(status == "") {
+                status = "game";
                 newGame();
             }
         });
 
         recordButton.setOnMouseClicked(e -> {
             if(status == "") {
+                status = "record";
                 loadRecord();
             }
         });

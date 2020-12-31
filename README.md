@@ -84,6 +84,7 @@ public class Bullet implements Affector, Drawable {
 }
 ```
 
+
 有了游戏中的物体，就可以运行游戏了，但我们还需要一个总控类来做刷新调用，指令赋予等工作。这个类实现为`GameController`，它实现了`Runnable`接口。运行时，每隔一段时间对游戏逻辑进行一次更新，当该次更新与逻辑帧重合时还会去向`Operator`请求逻辑帧，若成功获取，则进行指令赋予然后继续更新；否则的话，不进行更新，而是将该次更新计数储存起来，等到有逻辑帧后再一并更新。这是为联机运行时网络延迟所造成逻辑帧滞后提供支持。其中`Operator`是一个接口`Operation[] getLogicFrames(int logicFrame)`。部分代码如下：
 ```java
 public class GameController implements Runnable {
@@ -151,3 +152,41 @@ public class CreatureFactory {
 客户端与服务端的通信逻辑如下所示：
 ![](https://github.com/Hoyyyywolf/Images/raw/master/CalabashVsSnake/client-server.png)
 
+
+### 注意细节
+#### 线程安全
+游戏运行中会涉及到多线程同时运行。
++ 一方面，在上述设计中大多数线程都是在`while`循环下持续运行的，需要其他线程来终止循环。这里一般采用标志位的方式来终止循环，例如：
+```java
+public class DrawController implements Runnable{
+    @Override
+    public void run(){
+        while(!gameOver){
+            ...
+        }
+    }
+
+    public void terminate(){
+        gameOver = true;
+    }
+    ...
+}
+```
+主线程可以通过调用`terminate()`方法来安全地结束线程的循环。
++ 另一方面，多线程运行时会涉及到资源的竞争问题，特别需要注意临界区所带来的一系列问题。这里主要通过两种途径来解决：
+  + 对于`Map`，`List`等容器的存取，可以采用它们的线程安全版解决，如`ConcurrentHashMap`等。
+  + 而对于普通变量的访问与修改带来的问题，可以通过`synchronized`语法加锁来手动控制，例如：
+```java
+synchronized(lock){
+    if(logicFrame >= operationsList.size()){
+        return null;
+    }
+    else{
+        return operationsList.get(logicFrame);
+    }
+}
+```        
+
+## 心得体会
++ 程序开发时，最重要的部分在于架构的设计。一个好的架构，能让后续的代码复用，错误查找等事半功倍。所以在刚开始设计程序时，不要害怕重构，一旦发现架构设计会导致大量代码的冗余或者逻辑混乱等，赶快重构。
++ 网络编程部分涉及到了大量的异常处理以及异常导致的执行流跳转，这其中一定要十分注意执行流究竟到了哪里，以及异常处理完后会回到哪里执行。
