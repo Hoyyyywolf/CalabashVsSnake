@@ -22,3 +22,4 @@ buildNumber.properties
 
 #game record
 *.record
+!2021-01-01 19-59-48.record
