@@ -3,36 +3,43 @@ package nju.zjl.cvs.game;
 import nju.zjl.cvs.game.Constants.Camp;
 
 public class CreatureFactory {
-    public static Creature generatePlainCreature(int x, int y, Camp camp){
-        return new Creature(camp, x * Constants.COLUMNS + y, 100, 10, 3, AffectorFactory::generatePlainBullet, "red");
+    public static Creature getPlainCreature(int x, int y, Camp camp){
+        return new Creature(camp, x * Constants.COLUMNS + y, 100, 10, 3, 45, AffectorFactory::getPlainBullet, "red");
     }
 
-    public static Creature generateCalabash(int x, int y, String name){
+    public static Creature getCalabash(int x, int y, String name){
         switch(name){
             case "red":
-                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 100, 10, 1, AffectorFactory::generateRedBullet, "red");
+                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 150, 8, 2, 45, AffectorFactory::getStraightBullet, "red");
             case "orange":
-                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 100, 10, 2, AffectorFactory::generateOrangeBullet, "orange");
+                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 100, 15, 4, 30, AffectorFactory::getPenetrableBullet, "orange");
             case "yellow":
-                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 100, 10, 2, AffectorFactory::generateYellowBullet, "yellow");
+                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 200, 5, 1, 60, AffectorFactory::getStraightBullet, "yellow");
             case "green":
-                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 100, 10, 2, AffectorFactory::generateGreenBullet, "green");
+                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 150, 8, 2, 45, AffectorFactory::getStraightBullet, "green");
             case "cyan":
-                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 100, 10, 2, AffectorFactory::generateCyanBullet, "cyan");
+                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 150, 8, 2, 45, AffectorFactory::getStraightBullet, "cyan");
             case "blue":
-                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 100, 10, 2, AffectorFactory::generateBlueBullet, "blue");
+                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 120, 15, 3, 30, AffectorFactory::getPenetrableBullet, "blue");
             case "purple":
-                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 100, 10, 2, AffectorFactory::generatePurpleBullet, "purple");
+                return new Creature(Camp.CALABASH, x * Constants.COLUMNS + y, 200, 5, 1, 60, AffectorFactory::getStraightBullet, "purple");
             default:
                 return null;
         }
     }
 
-    public static Creature generateSnake(int x, int y){
-        return new Creature(Camp.SNAKE, x * Constants.COLUMNS + y, 1000, 5, 5, AffectorFactory::generatePenetrableBullet, "snake");
-    }
-
-    public static Creature generateScorpion(int x, int y){
-        return new Creature(Camp.SNAKE, x * Constants.COLUMNS + y, 1000, 5, 2, AffectorFactory::generateBouncingBullet, "scorpion");
+    public static Creature getMonster(int x, int y, String name){
+        switch(name){
+            case "snake":
+                return new Creature(Camp.MONSTER, x * Constants.COLUMNS + y, 250, 15, 5, 30, AffectorFactory::getBouncingBullet, "snake");
+            case "scorpion":
+                return new Creature(Camp.MONSTER, x * Constants.COLUMNS + y, 250, 12, 2, 60, AffectorFactory::getBouncingBullet, "scorpion");   
+            case "toad":
+                return new Creature(Camp.MONSTER, x * Constants.COLUMNS + y, 200, 10, 3, 40, AffectorFactory::getGuidedBullet, "toad");
+            case "centipede":
+                return new Creature(Camp.MONSTER, x * Constants.COLUMNS + y, 200, 8, 1, 50, AffectorFactory::getGuidedBullet, "centipede");
+            default:
+                return null;
+        }
     }
 }

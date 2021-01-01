@@ -10,7 +10,7 @@ import nju.zjl.cvs.game.Constants.Camp;
 public class BulletTest {
     @Test
     public void bulletTest1(){
-        Affector bullet = AffectorFactory.generatePlainBullet(targetX, targetY - 200, target.getId(), 10);
+        Affector bullet = AffectorFactory.getPlainBullet(targetX, targetY - 200, target.getId(), 10);
         items.addAffector(bullet);
         assertEquals(100, target.hp);
         while(items.atQueue.contains(bullet)){
@@ -21,7 +21,7 @@ public class BulletTest {
 
     @Test
     public void bulletTest2(){
-        Affector bullet = AffectorFactory.generatePlainBullet(targetX + 300, targetY - 200, target.getId(), 110);
+        Affector bullet = AffectorFactory.getPlainBullet(targetX + 300, targetY - 200, target.getId(), 110);
         items.addAffector(bullet);
         assertEquals(100, target.hp);
         while(items.atQueue.contains(bullet)){
@@ -32,15 +32,15 @@ public class BulletTest {
 
 
     public BulletTest(){
-        target = CreatureFactory.generatePlainCreature(3, 4, Camp.CALABASH);
+        target = CreatureFactory.getPlainCreature(3, 4, Camp.CALABASH);
         int[] ret = Constants.creaturePos2BulletPos(target.getPos());
         targetX = ret[0];
         targetY = ret[1];
         items = new ItemManager();
         items.addCreature(target);
-        items.addCreature(CreatureFactory.generatePlainCreature(7, 8, Camp.CALABASH));
-        items.addCreature(CreatureFactory.generatePlainCreature(3, 6, Camp.CALABASH));
-        items.addCreature(CreatureFactory.generatePlainCreature(2, 5, Camp.CALABASH));
+        items.addCreature(CreatureFactory.getPlainCreature(7, 8, Camp.CALABASH));
+        items.addCreature(CreatureFactory.getPlainCreature(3, 6, Camp.CALABASH));
+        items.addCreature(CreatureFactory.getPlainCreature(2, 5, Camp.CALABASH));
     }
 
     int targetX;

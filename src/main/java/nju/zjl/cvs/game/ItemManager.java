@@ -60,15 +60,25 @@ public class ItemManager {
 
     public void initDefaultCreatures(){
         Creature.resetIdentifier();
-        addCreature(CreatureFactory.generateCalabash(3, 4, "red"));
-        addCreature(CreatureFactory.generateCalabash(2, 2, "orange"));
-        addCreature(CreatureFactory.generateCalabash(2, 3, "yellow"));
-        addCreature(CreatureFactory.generateCalabash(2, 5, "green"));
-        addCreature(CreatureFactory.generateCalabash(2, 6, "blue"));
-        addCreature(CreatureFactory.generateCalabash(1, 2, "cyan"));
-        addCreature(CreatureFactory.generateCalabash(1, 3, "purple"));
-        addCreature(CreatureFactory.generateScorpion(3, 6));
-        addCreature(CreatureFactory.generateSnake(3, 8));
+
+        addCreature(CreatureFactory.getCalabash(0, 0, "orange"));
+        addCreature(CreatureFactory.getCalabash(8, 0, "blue"));
+
+        addCreature(CreatureFactory.getCalabash(3, 4, "purple"));
+        addCreature(CreatureFactory.getCalabash(5, 4, "yellow"));
+
+        addCreature(CreatureFactory.getCalabash(2, 2, "green"));
+        addCreature(CreatureFactory.getCalabash(4, 2, "red"));
+        addCreature(CreatureFactory.getCalabash(6, 2, "cyan"));
+
+
+        addCreature(CreatureFactory.getMonster(0, 11, "snake"));
+
+        addCreature(CreatureFactory.getMonster(4, 7, "scorpion"));
+
+        addCreature(CreatureFactory.getMonster(6, 9, "toad"));
+
+        addCreature(CreatureFactory.getMonster(2, 8, "centipede"));
     }
 
     protected Map<Integer, Creature> ctPosMap = new ConcurrentHashMap<>();

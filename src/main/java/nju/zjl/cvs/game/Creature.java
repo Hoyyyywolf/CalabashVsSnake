@@ -8,7 +8,7 @@ import nju.zjl.cvs.game.Constants.Camp;
 
 
 public class Creature implements Drawable {
-    public Creature(Camp camp, int pos, int maxHp, int atk, int atkRange, BulletSupplier bullet, String imgName){
+    public Creature(Camp camp, int pos, int maxHp, int atk, int atkRange, int maxAtkCD, BulletSupplier bullet, String imgName){
         this.id = identifier++;
         this.camp = camp;
         this.pos = pos;
@@ -19,6 +19,7 @@ public class Creature implements Drawable {
         this.inst = Instruction.newNullInst();
         this.moveCD = 0;
         this.atkCD = 0;
+        this.maxAtkCD = maxAtkCD;
         this.movePath = null;
         this.bullet = bullet;
         this.imgName = imgName;
@@ -136,7 +137,7 @@ public class Creature implements Drawable {
         }
         int[] ret = Constants.creaturePos2BulletPos(pos);
         items.addAffector(bullet.get(ret[0], ret[1], target, atk));
-        atkCD = Constants.CREATUREATTACKCD;
+        atkCD = maxAtkCD;
     }
 
     protected void autoAttack(ItemManager items){
@@ -156,7 +157,7 @@ public class Creature implements Drawable {
                 }
                 int[] ret = Constants.creaturePos2BulletPos(pos);
                 items.addAffector(bullet.get(ret[0], ret[1], ct.getId(), atk));
-                atkCD = Constants.CREATUREATTACKCD;
+                atkCD = maxAtkCD;
                 return;
             }
         }
@@ -182,6 +183,7 @@ public class Creature implements Drawable {
 
     protected int atk;
     protected int atkCD;
+    protected int maxAtkCD;
     protected int atkRange;
 
     protected BulletSupplier bullet;

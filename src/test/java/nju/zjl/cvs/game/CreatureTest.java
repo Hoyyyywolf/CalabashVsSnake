@@ -32,7 +32,7 @@ public class CreatureTest {
         c1.update(items);
         assertNotEquals(0, items.atQueue.size());
         assertEquals(c2.getId(), ((GuidedBullet)items.atQueue.poll()).target);
-        for(int i = 0; i < 7 * Constants.CREATUREATTACKCD; i++){
+        for(int i = 0; i < 7 * c1.maxAtkCD; i++){
             c1.update(items);
         }
         assertEquals(7, items.atQueue.size());
@@ -51,9 +51,9 @@ public class CreatureTest {
 
     public CreatureTest(){
         items = new ItemManager();
-        c1 = CreatureFactory.generatePlainCreature(2, 2, Camp.SNAKE);
-        c2 = CreatureFactory.generatePlainCreature(4, 4, Camp.CALABASH);
-        c3 = CreatureFactory.generatePlainCreature(3, 8, Camp.CALABASH);
+        c1 = CreatureFactory.getPlainCreature(2, 2, Camp.MONSTER);
+        c2 = CreatureFactory.getPlainCreature(4, 4, Camp.CALABASH);
+        c3 = CreatureFactory.getPlainCreature(3, 8, Camp.CALABASH);
         items.addCreature(c1);
         items.addCreature(c2);
         items.addCreature(c3);

@@ -8,19 +8,18 @@ import javafx.scene.paint.Color;
 
 public class Constants {
     public enum Camp {
-        CALABASH, SNAKE
+        CALABASH, MONSTER
     }
 
     //map size
-    public static final int ROWS = 8;
-    public static final int COLUMNS = 10;
+    public static final int ROWS = 9;
+    public static final int COLUMNS = 12;
 
     //game FPS
     public static final int FPS = 30;
 
     //creature move speed, 15 frames(0.5s) to move 1 grid
     public static final int CREATUREMOVECD = 15;
-    public static final int CREATUREATTACKCD = 45;
 
     public static final int GUIDEDBULLETSPEED = 10;
 
@@ -44,7 +43,7 @@ public class Constants {
 
     static{
         imgMap = new HashMap<>();
-        String[] images = {"red", "green", "blue", "yellow", "orange", "purple", "cyan", "snake", "scorpion", "toad", "centipede", "redBullet", "greenBullet", "blueBullet", "yellowBullet", "orangeBullet", "purpleBullet", "cyanBullet", "straightBullet"};
+        String[] images = {"red", "green", "blue", "yellow", "orange", "purple", "cyan", "snake", "scorpion", "toad", "centipede", "guidedBullet", "penetrableBullet", "bouncingBullet", "straightBullet"};
         for(String img : images){
             InputStream in = Constants.class.getClassLoader().getResourceAsStream("image/" + img +".png");
             imgMap.put(img, new Image(in));

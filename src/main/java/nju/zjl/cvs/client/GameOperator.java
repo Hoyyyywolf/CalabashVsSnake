@@ -85,7 +85,7 @@ public class GameOperator implements Operator, Runnable{
             boolean c = in.readBoolean();
             objin = new ObjectInputStream(client.getInputStream());
             objout = new ObjectOutputStream(client.getOutputStream());
-            begin.accept(c ? Camp.CALABASH : Camp.SNAKE);
+            begin.accept(c ? Camp.CALABASH : Camp.MONSTER);
         }catch(UnknownHostException exception){
             System.err.println("hostIp is illegal: " + hostIp);
             exception.printStackTrace();
