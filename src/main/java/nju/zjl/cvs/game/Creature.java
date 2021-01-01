@@ -70,18 +70,6 @@ public class Creature implements Drawable {
         return camp;
     }
 
-    public int getHp(){
-        return hp;
-    }
-
-    public int getMaxHp(){
-        return maxHp;
-    }
-
-    public String getImgName(){
-        return imgName;
-    }
-
     public void setInst(Instruction inst){
         this.inst = inst;
     }
@@ -157,7 +145,7 @@ public class Creature implements Drawable {
         }
         int x = pos / Constants.COLUMNS - atkRange;
         int y = pos % Constants.COLUMNS - atkRange;
-        for(int i = 0; i < 2 * atkRange + 1; i++)
+        for(int i = 0; i < 2 * atkRange + 1; i++){
             for(int j = 0; j < 2 * atkRange + 1; j++){
                 if(x + i < 0 || x + i >= Constants.ROWS || y + j < 0 || y + j >= Constants.COLUMNS){
                     continue;
@@ -171,6 +159,7 @@ public class Creature implements Drawable {
                 atkCD = Constants.CREATUREATTACKCD;
                 return;
             }
+        }
     }
     
     public static void resetIdentifier(){

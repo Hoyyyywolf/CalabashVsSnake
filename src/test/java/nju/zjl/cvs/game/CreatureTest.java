@@ -31,7 +31,7 @@ public class CreatureTest {
     public void creatureTest2(){
         c1.update(items);
         assertNotEquals(0, items.atQueue.size());
-        assertEquals(c2.getId(), ((Bullet)items.atQueue.poll()).target);
+        assertEquals(c2.getId(), ((GuidedBullet)items.atQueue.poll()).target);
         for(int i = 0; i < 7 * Constants.CREATUREATTACKCD; i++){
             c1.update(items);
         }
@@ -46,7 +46,7 @@ public class CreatureTest {
         while(items.atQueue.isEmpty()){
             c1.update(items);
         }
-        assertEquals(c3.getId(), ((Bullet)items.atQueue.poll()).target);
+        assertEquals(c3.getId(), ((GuidedBullet)items.atQueue.poll()).target);
     }
 
     public CreatureTest(){

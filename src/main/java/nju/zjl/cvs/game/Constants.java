@@ -22,7 +22,9 @@ public class Constants {
     public static final int CREATUREMOVECD = 15;
     public static final int CREATUREATTACKCD = 45;
 
-    public static final int BULLETSPEED = 10;
+    public static final int GUIDEDBULLETSPEED = 10;
+
+    public static final int STRAIGHTBULLETSPEED = 20;
 
     public static final int GRIDWIDTH = 70;
     public static final int GRIDHEIGHT = 70;
@@ -42,7 +44,7 @@ public class Constants {
 
     static{
         imgMap = new HashMap<>();
-        String[] images = {"red", "green", "blue", "yellow", "orange", "purple", "cyan", "snake", "scorpion", "toad", "centipede", "redBullet", "greenBullet", "blueBullet", "yellowBullet", "orangeBullet", "purpleBullet", "cyanBullet"};
+        String[] images = {"red", "green", "blue", "yellow", "orange", "purple", "cyan", "snake", "scorpion", "toad", "centipede", "redBullet", "greenBullet", "blueBullet", "yellowBullet", "orangeBullet", "purpleBullet", "cyanBullet", "straightBullet"};
         for(String img : images){
             InputStream in = Constants.class.getClassLoader().getResourceAsStream("image/" + img +".png");
             imgMap.put(img, new Image(in));

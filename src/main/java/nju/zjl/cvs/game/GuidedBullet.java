@@ -4,8 +4,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.transform.Rotate;
 
-public class Bullet implements Affector, Drawable {
-    public Bullet(int x, int y, int target, int damage, String imgName){
+public class GuidedBullet implements Affector, Drawable {
+    public GuidedBullet(int x, int y, int target, int damage, String imgName){
         this.x = x;
         this.y = y;
         this.target = target;
@@ -23,14 +23,10 @@ public class Bullet implements Affector, Drawable {
         }
         int[] dest = Constants.creaturePos2BulletPos(ct.getPos());
         moveTo(dest[0], dest[1]);
-        if(ct.getPos() == Constants.bulletPos2CreaturePos(x, y)){
-            boolean dead = ct.hurt(damage);
-            if(dead){
-                items.removeCreature(ct.getId());
-            }
-            items.removeAffector(this);
-        }
         computeAngle(dest[0], dest[1]);
+        if(Math.abs(x - dest[0]) <= 25 && Math.abs(y - dest[1]) <= 25){
+            hit(ct, items);
+        }
     }
 
     @Override
@@ -45,24 +41,24 @@ public class Bullet implements Affector, Drawable {
         gc.restore();
     }
 
-    public int getX(){
-        return x;
-    }
-
-    public int getY(){
-        return y;
+    protected void hit(Creature t, ItemManager items){
+        boolean dead = t.hurt(damage);
+        if(dead){
+            items.removeCreature(t.getId());
+        }
+        items.removeAffector(this);
     }
 
     protected void moveTo(int destX, int destY){
         int deltaX = destX - x;
         int deltaY = destY - y;
         double dis = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-        if(dis <= Constants.BULLETSPEED){
+        if(dis <= Constants.GUIDEDBULLETSPEED){
             x = destX;
             y = destY;
         }
         else{
-            double s = Constants.BULLETSPEED / dis;
+            double s = Constants.GUIDEDBULLETSPEED / dis;
             x += deltaX * s;
             y += deltaY * s;
         }

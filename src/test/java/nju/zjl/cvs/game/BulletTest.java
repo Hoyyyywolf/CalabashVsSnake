@@ -12,18 +12,18 @@ public class BulletTest {
     public void bulletTest1(){
         Affector bullet = AffectorFactory.generatePlainBullet(targetX, targetY - 200, target.getId(), 10);
         items.addAffector(bullet);
-        assertEquals(100, target.getHp());
+        assertEquals(100, target.hp);
         while(items.atQueue.contains(bullet)){
             bullet.update(items);
         }
-        assertEquals(90, target.getHp());
+        assertEquals(90, target.hp);
     }    
 
     @Test
     public void bulletTest2(){
         Affector bullet = AffectorFactory.generatePlainBullet(targetX + 300, targetY - 200, target.getId(), 110);
         items.addAffector(bullet);
-        assertEquals(100, target.getHp());
+        assertEquals(100, target.hp);
         while(items.atQueue.contains(bullet)){
             bullet.update(items);
         }

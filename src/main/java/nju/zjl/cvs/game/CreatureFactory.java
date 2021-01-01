@@ -29,10 +29,10 @@ public class CreatureFactory {
     }
 
     public static Creature generateSnake(int x, int y){
-        return new Creature(Camp.SNAKE, x * Constants.COLUMNS + y, 1000, 20, 5, AffectorFactory::generatePlainBullet, "snake");
+        return new Creature(Camp.SNAKE, x * Constants.COLUMNS + y, 1000, 5, 5, AffectorFactory::generatePenetrableBullet, "snake");
     }
 
     public static Creature generateScorpion(int x, int y){
-        return new Creature(Camp.SNAKE, x * Constants.COLUMNS + y, 1000, 20, 2, AffectorFactory::generatePlainBullet, "scorpion");
+        return new Creature(Camp.SNAKE, x * Constants.COLUMNS + y, 1000, 5, 2, AffectorFactory::generateBouncingBullet, "scorpion");
     }
 }
