@@ -48,7 +48,6 @@ public class GameController implements Runnable {
                     if(c != null){
                         c.setInst(op.inst);
                     }
-
                 }
                 logicFrame++;
                 logicTimer = Constants.FPS / 10;

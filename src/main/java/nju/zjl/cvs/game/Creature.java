@@ -107,7 +107,7 @@ public class Creature implements Drawable {
         else{
             path = Algorithms.findAtkPath(map, Constants.COLUMNS, pos, dest, atkRange);
         }
-        if(path.length == 0){ //cannot move to dest, instruction was illeagal, drop it
+        if(path.length == 0 || path.length == 1){ //cannot move to dest, instruction was illeagal, drop it
             movePath = null;
             inst = Instruction.newNullInst();
             return false;
