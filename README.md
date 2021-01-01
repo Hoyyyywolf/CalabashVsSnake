@@ -9,10 +9,15 @@
 
 ### 游戏说明
 进入游戏后，点击"New Game"按钮将连接服务器并匹配玩家，匹配成功后，游戏将会自动开始并且右侧消息区将会显示你的阵营。
+![](https://github.com/Hoyyyywolf/Images/raw/master/CalabashVsSnake/new%20game.gif)
 
 游戏开始后，点击游戏场景中同阵营的人物可对其进行选中，选中后再点击空格可进行移动，点击敌军可进行攻击，当攻击距离不够时会自动移动到攻击距离以内。若不对人物进行操作，它们将自动选取攻击距离内的敌军并攻击。
+![](https://github.com/Hoyyyywolf/Images/raw/master/CalabashVsSnake/operation.gif)
 
-游戏中的子弹主要有四种类型。葫芦娃阵营的子弹是直线弹和穿透弹，前者沿直线飞行并伤害第一个命中的敌军，后者沿直线飞行但伤害途中的每一个敌军。妖精阵营的子弹是追踪弹和弹射弹，前者自动
+游戏中的子弹主要有四种类型。葫芦娃阵营的子弹是直线弹和穿透弹，前者沿直线飞行并伤害第一个命中的敌军，后者沿直线飞行但伤害途中的每一个敌军。妖精阵营的子弹是追踪弹和弹射弹，前者自动追踪并伤害目标，后者在命中目标后会弹射附近两格内最近的敌军上，最多弹射两次。
+
+当一方的生物全部死亡后，游戏结束，对局记录会自动保存在当前目录下，名为"xxx.record"，点击"Load Record"按钮可以加载记录文件重新观看对局。
+![](https://github.com/Hoyyyywolf/Images/raw/master/CalabashVsSnake/load%20record.gif)
 
 
 ## 代码设计
@@ -71,34 +76,34 @@ public class Creature implements Drawable {
 
 影响因子是生物对生物造成影响的间接对象，所有生物想要对其他生物造成伤害、治疗等，都只能通过产生影响因子来实现。影响因子对外提供的接口只有一个`void update(ItemManager items)`，该接口负责更新自身的状态，并造成影响。
 
-子弹就是影响因子的一种，它能够自动寻路并移动到目标处对其造成伤害，部分代码如下：
+子弹就是影响因子的一种，子弹能够移动并伤害命中的目标。游戏中主要有两种子弹类型：追踪弹和直线弹，为便于对子弹的命中效果做扩展，这里采用模板方法的设计模式，将命中目标后的操作抽象为`void hit(Creature t, ItemManager items)`方法，基类提供默认实现，派生类可通过重写该方法来改变子弹的命中效果。弹射弹和穿透弹都是通过该方法实现的。部分代码如下：
 ```java
-public class Bullet implements Affector, Drawable {
-    public Bullet(int x, int y, int target, int damage, String imgName){
-        ...
-    }
-    
+public class GuidedBullet implements Affector, Drawable {
     @Override
     public void update(ItemManager items){
-        Creature ct = items.getCreatureById(target); //获取攻击目标
-        if(ct == null){ //攻击目标已死亡，销毁自身
+        Creature ct = items.getCreatureById(target);
+        if(ct == null){ //攻击对象已死亡，删除该子弹
             items.removeAffector(this);
             return;
         }
-        //获取攻击目标位置，并移动
-        int[] dest = Constants.creaturePos2BulletPos(ct.getPos());
-        moveTo(dest[0], dest[1]);
-        //若到达攻击目标处，则伤害目标并判断是否死亡
-        if(ct.getPos() == Constants.bulletPos2CreaturePos(x, y)){ 
-            boolean dead = ct.hurt(damage);
-            ...
-        }
+        int[] dest = Constants.creaturePos2BulletPos(ct.getPos()); //获取攻击对象位置
+        moveTo(dest[0], dest[1]); 
         ...
+        if(Math.abs(x - dest[0]) <= 25 && Math.abs(y - dest[1]) <= 25){ //命中目标
+            hit(ct, items);
+        }
     }
-   ...
-}
-```
 
+    protected void hit(Creature t, ItemManager items){ //默认实现，命中目标后就消失
+        boolean dead = t.hurt(damage);
+        if(dead){
+            items.removeCreature(t.getId());
+        }
+        items.removeAffector(this);
+    }
+}
+
+```
 
 有了游戏中的物体，就可以运行游戏了，但我们还需要一个总控类来做刷新调用，指令赋予等工作。这个类实现为`GameController`，它实现了`Runnable`接口。运行时，每隔一段时间对游戏逻辑进行一次更新，当该次更新与逻辑帧重合时还会去向`Operator`请求逻辑帧，若成功获取，则进行指令赋予然后继续更新；否则的话，不进行更新，而是将该次更新计数储存起来，等到有逻辑帧后再一并更新。这是为联机运行时网络延迟所造成逻辑帧滞后提供支持。其中`Operator`是一个接口`Operation[] getLogicFrames(int logicFrame)`。部分代码如下：
 ```java
