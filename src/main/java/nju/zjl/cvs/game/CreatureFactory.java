@@ -31,13 +31,13 @@ public class CreatureFactory {
     public static Creature getMonster(int x, int y, String name){
         switch(name){
             case "snake":
-                return new Creature(Camp.MONSTER, x * Constants.COLUMNS + y, 250, 15, 5, 30, AffectorFactory::getBouncingBullet, "snake");
+                return new Creature(Camp.MONSTER, x * Constants.COLUMNS + y, 150, 12, 5, 30, AffectorFactory::getBouncingBullet, "snake");
             case "scorpion":
-                return new Creature(Camp.MONSTER, x * Constants.COLUMNS + y, 250, 12, 2, 60, AffectorFactory::getBouncingBullet, "scorpion");   
+                return new Creature(Camp.MONSTER, x * Constants.COLUMNS + y, 200, 8, 1, 60, AffectorFactory::getBouncingBullet, "scorpion");   
             case "toad":
-                return new Creature(Camp.MONSTER, x * Constants.COLUMNS + y, 200, 10, 3, 40, AffectorFactory::getGuidedBullet, "toad");
+                return new Creature(Camp.MONSTER, x * Constants.COLUMNS + y, 100, 10, 3, 40, AffectorFactory::getGuidedBullet, "toad");
             case "centipede":
-                return new Creature(Camp.MONSTER, x * Constants.COLUMNS + y, 200, 8, 1, 50, AffectorFactory::getGuidedBullet, "centipede");
+                return new Creature(Camp.MONSTER, x * Constants.COLUMNS + y, 100, 8, 2, 50, AffectorFactory::getGuidedBullet, "centipede");
             default:
                 return null;
         }

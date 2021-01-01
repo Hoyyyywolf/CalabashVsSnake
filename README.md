@@ -7,7 +7,10 @@
 ### 运行方法
 执行`mvn clean package`命令，从target目录下提取`cvs-1.0-jar-with-dependencies.jar`文件，双击或执行命令`java -jar cvs-1.0-jar-with-dependencies.jar`均可运行游戏。
 
-### 游戏
+### 游戏说明
+进入游戏后，点击"New Game"按钮将连接服务器并匹配玩家，匹配成功后，游戏将会自动开始并且右侧消息区将会显示你的阵营。
+
+
 
 ## 代码设计
 ### 设计思想

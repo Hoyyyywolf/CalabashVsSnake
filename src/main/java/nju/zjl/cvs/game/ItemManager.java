@@ -76,9 +76,11 @@ public class ItemManager {
 
         addCreature(CreatureFactory.getMonster(4, 7, "scorpion"));
 
+        addCreature(CreatureFactory.getMonster(2, 9, "toad"));
         addCreature(CreatureFactory.getMonster(6, 9, "toad"));
 
-        addCreature(CreatureFactory.getMonster(2, 8, "centipede"));
+        addCreature(CreatureFactory.getMonster(3, 8, "centipede"));
+        addCreature(CreatureFactory.getMonster(5, 8, "centipede"));
     }
 
     protected Map<Integer, Creature> ctPosMap = new ConcurrentHashMap<>();

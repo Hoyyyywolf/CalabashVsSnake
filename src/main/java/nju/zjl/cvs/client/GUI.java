@@ -56,6 +56,7 @@ public class GUI extends Application{
         info.prefHeightProperty().bind(vlayout.heightProperty());
         vlayout.prefHeightProperty().bind(root.heightProperty());
 
+        primaryStage.setTitle("Calabash Vs Monster");
         primaryStage.setScene(scene);
         primaryStage.show();
         stage = primaryStage;
